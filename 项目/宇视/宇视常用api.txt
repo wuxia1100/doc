@@ -1,0 +1,13 @@
+1 sku
+	@ApiMethod(code = "rs.senddataBase.sendSaveOpRsToEsAndStatic", name = "处理商品SKU的ES搜索与静态化", paramStr = "rsFlowData", description = "")
+    void sendSaveOpRsToEsAndStatic(RsFlowdata rsFlowData);
+    @ApiMethod(code = "rs.resourceGoods.updateShelveGoods", name = "商品上架（goods）", paramStr = "goodsIds", description = "")
+    public List<RsSenddata> updateShelveGoods(List<Integer> goodsIds)throws ApiException;
+	
+2 新增客户
+    @ApiMethod(code = "um.user.sendUserinfo", name = "开户进程启动", paramStr = "umUserinfo", description = "")
+    void sendUserinfo(UmUserinfo umUserinfo) throws ApiException;
+	
+	String apiCode = "vd.faccount.saveOpenFaccoun";
+	vdFaccountOuterCtrlDomain.setFaccountOuterCtrlCallurl("um.user.udateCallFaccount");
+

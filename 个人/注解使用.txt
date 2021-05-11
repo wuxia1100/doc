@@ -1,0 +1,5 @@
+@ControllerAdvice
+	1 本质上是一个compent,会被扫描		
+	2 是aop思想的一种实现，你告诉我需要拦截规则，我帮你把他们拦下来，具体你想做更细致的拦截筛选和拦截之后的处理，
+	  你自己通过@ExceptionHandler、@InitBinder 或 @ModelAttribute这三个注解以及被其注解的方法来自定义
+	3 处理全局异常

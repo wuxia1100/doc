@@ -1,0 +1,49 @@
+ssh:
+ssh readonly@101.132.147.233
+ $ ssh -p 22 root@服务器ip 
+
+
+1 yum
+YUM（ Yellow dog Updater, Modified）是一个在Fedora和RedHat以及CentOS中的Shell前端软件包管理器。
+
+它基于RPM包管理，能够从指定的服务器自动下载RPM包并且安装，可以自动处理依赖性关系，无须繁琐地一次次下载、安装
+Linux中的yum命令是大家经常用到的功能，全称是Yellow dog Updater， Modified，是由Duke University团队修改Yellow Dog Linux
+的Yellow Dog Updater开发而成，是一个基于RPM包管理的字符前端软件包管理器
+1、yum 语法，yum [options][command][package 。。.]
+
+2、options：可选，选项包括-h(帮助)，-y(当安装过程提示选择全部为“yes”)，-q(不显示安装的过程)等等。
+
+3、command：要进行的操作。
+
+4、package操作的对象。
+
+5、yum常用命令，列出所有可更新的软件清单命令：yum check-update;
+
+6、更新所有软件命令：yum update;
+
+7、仅安装指定的软件命令：yum install 《package_name》;
+
+8、仅更新指定的软件命令：yum update 《package_name》;
+
+9、列出所有可安裝的软件清单命令：yum list;
+
+10、删除软件包命令：yum remove 《package_name》;
+
+11、查找软件包 命令：yum search 《keyword》;
+
+12、清除缓存命令：
+
+13、yum clean packages：清除缓存目录下的软件包;
+
+14、yum clean headers：清除缓存目录下的 headers;
+
+15、yum clean oldheaders：清除缓存目录下旧的 headers;
+
+16、yum clean， yum clean all (= yum clean packages; yum clean oldheaders) ：清除缓存目录下的软件包及旧的headers。
+2 wget
+	wget是一个从网络上自动下载文件的自由工具，支持通过HTTP、HTTPS、FTP三个最常见的TCP/IP协议下载，并可以使用HTTP代理。
+	wget名称的由来是“World Wide Web”与“get”的结合
+	远程连接请求，下载
+3 rpm
+	1 linux 系统上的包管理工具
+4 systemctl

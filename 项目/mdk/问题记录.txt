@@ -1,0 +1,229 @@
+1 商品详情报错
+	-- 商品有数据
+	SELECT * from rs_sku where SKU_NO = "PMD9048200" and TENANT_CODE = "2020072700000001";
+	-- 商品属性没有数据：
+	SELECT * FROM rs_properties_value where GOODS_CODE = "2021022400000034";
+	-- 报错空指针: Collections.sort 如何集合为空，或者小于2个对象，是不会进行比较，所有不可能是这里空指针 
+	o1.getPropertiesValueType()：o1 对象为空
+	 Collections.sort(rsPropertiesValueDomainList, new Comparator<RsPropertiesValueDomain>() {
+            @Override
+            public int compare(RsPropertiesValueDomain o1, RsPropertiesValueDomain o2) {
+                if (null != o1.getPropertiesValueType() && null != o2.getPropertiesValueType()) {
+                    return -o1.getPropertiesValueType().compareTo(o2.getPropertiesValueType());
+                }
+                return -1;
+            }
+        });
+	-- v2 :rsResourceGoodsReDomain 没有初始化 rsPropertiesValueDomainList集合，所有集合对象是空，排序时报空指针
+	List<RsPropertiesValueDomain> rsPropertiesValueDomainList = rsResourceGoodsReDomain.getRsPropertiesValueDomainList();
+	-- 问题
+	1 商品发布：发布商品时，选择分类后，没有选择商品属性
+	2 商品属性未初始化：商品属性，在商品发布时没有初始化数据，选择商品分类后，无法带出商品属性给用户选择
+	3 新加一个商品，商城首页根据商品名搜索，会出现多余数据
+	-- 引发问题
+	1 商品编辑：商品编辑无法选择分类，没有办法修改商品属性
+	2 上架：1 上架操作成功，但是商品状态还是未上架 2 使用批里上架，商品又可以上架成功
+	3 下架：1 有些商品下架失败 2 使用批里下架，可以下架成功
+	-- 解决方案
+	1 判空：1 可以解决商品详情查询报错 2 但是无法解决商品无法编辑商品属性，商品详情缺少属性信息
+	2 商品编辑：1 商品编辑页可以修改商品属性 2 前端修改 3 后台待确认是否需要接口支持
+	-- 解决过程
+	1 if(rsPropertiesValueDomainList != null)
+	2 初始化商品参数 > 商品编辑 > 这时就可以编辑属性了，如果没有初始化商品参数数据，则无法编辑 > 商品详情就可以看到了 
+2 注册有礼
+	-- 问题
+	1 优惠价列表显示有误
+	2 点击编辑页404
+	3 新增完一个注册有礼，再次新增会回带上次新增信息，修改后点击保存报错 
+	4 开始状态：开始状态没有触发，开始时间已经到了，触发机制是什么
+	-- 原因
+	1 前端没有调代金券接口
+	2 前端没有编辑页面路由
+	3 原因没有看
+	4 触发机制还没有执行
+	-- 解决方案
+	1 需要确认代金券接口是否支持
+	2 需求确认代金券编辑接口是否支持
+	3 用户刷新页面没有用，必须退出后重新登录才能再次新增
+	4 a 过段时间看状态 b 确认触发机制
+	-- 解决过程
+	1 前端调用代金券列表接口：传入参数dataState=1，获取进行中的代金券
+	Request URL: https://admin.yhp360.com/web/pm/promotion/queryPromotionPageCasheQuivalent.json?pbCode=0003
+	rows=10&page=1&dataState=1
+	-- 需求
+	1 代金券在客户资质认证通过后，系统发放到客户账户
+	2 子账户也可以使用优惠券
+		-- 备注
+		1 子账户注册不会方法注册有礼优惠券，因为发放代金券的入口放到认证成功后了
+	-- 问题
+	1 a 是否可以同时存在多个注册有礼活动，活动创建目前没有控制  b 如果有两个或多个注册有礼活动同时开始状态，使用哪个活动
+	2 a 子账户使用代金券的逻辑现在是否支持，b 表机构是否支持子账户使用父账户代金券 c 表结构是否支持记录是哪个子账户使用的
+	3 用户现在是可以多次申请，也就是可以多次审核成功通过，代金券是否只发放一次，数据表结构是否支持校验已领过
+	-- 解决方案	
+	1 待确认功能和需求
+	2 在审核成功逻辑后，调用发放代金卷逻辑
+	-- 确认结果
+	1 有多个同时存在的活动，就给用户账户发放多个代金券 - 2021/4/21 	李成瑜
+	-- 解决过程
+	1 发放代金券入口：String s = sendSaveMarketingPromotion("0017", pmCheckBean, umUserinfo.getTenantCode());
+	2 客户认证成功处：@ApiMethod(code="um.user.sendUpdateUserinfoapplyState",name="经销商用户资质信息审核状态更新ID",paramStr="userinfoapplyId,dataState,oldDataState,map",description="经销商用户资质信息审核状态更新ID")
+	    @ApiMethod(code="pm.channelsendBase.sendUserRegister",name="注册有礼推送",paramStr="umUserinfo,umUser,optype",description="注册有礼推送")
+		@ApiMethod(code="pm.channelsendBase.sendSaveMarketingPromotion",name="系统发放营销",paramStr="pbCode,skuBean,tenantCode",description="系统发放营销")
+	3 先校验代金券发放 > 保存发放流水 > 更新发放数量 > 调用发放接口  pm.pmPromotionEngine.savePromotionSystem 
+
+		-- v2
+	1 新增路由：USERSEND_API_TYPE = update ：update > 资质认证成功,此次动作是修改用户资质状态:增加一个发放代金券的业务节点
+		USERSEND_API_APICODE = 
+	  
+	INSERT INTO `qjpaas-all`.`um_usersend_api` ( `USERSEND_API_CODE`, `USERSEND_API_TYPE`, `USERSEND_API_APICODE`, `USERSEND_API_NAME`, `MEMBER_CODE`, `MEMBER_NAME`, `MEMO`, `DATA_CALLTYPE`, `DATA_CALLVER`, `DATA_PARAM`, `DATA_COM`, `DATA_FLAG`, `TENANT_CODE`, `DATA_STATE`, `GMT_CREATE`, `GMT_MODIFIED`) VALUES ( 'API020', 'update', 'pm.channelsendBase.sendUserRegister', '注册有礼（认证）', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '00000000', '0', NULL, NULL);
+
+	-- 编辑 
+	https://admin.yhp360.com/web/pm/promotion/updatePromotion.json
+	
+3 下单-商品：待确认
+	-- 问题
+	1 下单提示数据为空，优先加入购物车的为手套类时会发生
+	-- 原因:
+	王程叙：rs_sku:CHANNEL_CODE 为空，有些商品
+	-- 解决方案
+	王程叙：1 数据库手动加 CHANNEL_CODE 2 下架商品重新编辑
+	-- 解决过程
+	1 CHANNEL_CODE = "2021011400000001"  CHANNEL_NAME = "善长医疗科技（上海）有限公司"   MEMBER_CODE = "20000210346942";
+		select * from rs_sku where MEMBER_CODE = "20000210346942" AND  CHANNEL_CODE is  null;
+	update rs_sku set CHANNEL_CODE = "2021011400000001" , CHANNEL_NAME = "善长医疗科技（上海）有限公司"
+	where MEMBER_CODE = "20000210346942" AND  CHANNEL_CODE is  null;
+	-- 重现
+	1 排查问题：为什么rs_sku会出现没有渠道信息 ，无法重现
+4 分类查询
+	-- 问题：分类点击商品有误——需具体描述那些商品，严格按一二三级分类来展示商品列表
+	1 点击分类查询没有问题，在此业务输入搜索条件时，会多出很多其它分类的商品
+	-- 原因
+	1 前端请求参数缺少分类参数
+	Request URL: https://www.yhp360.com/web/es/searchengine/find.json?page=1&rows=20&order=asc&sortField=&minPrice=1
+	page=1&rows=20&order=asc&sortField=&minPrice=1
+	-- 解决方案
+	1 前端加上分类参数 2 后台确认接口是否支持
+	-- 解决过程：ok
+	1 加上分类参数：classtreeCode 2 加上bizType=goods
+	https://www.yhp360.com/web/es/searchengine/find.json?page=1&rows=20&order=asc&sortField=&minPrice=1&classtreeCode=2021022300000046&bizType=goods
+
+5 订单改价
+	-- 问题
+	1 修改价格：调整价格：1 是优惠金额 2 还是订单支付金额 ：目前是作为优惠金额 》 
+	2 订单价格：现在 》最终订单支付金额 = 原订单支付金额 + 优惠金额  
+	3 商品价格：现在 》商品价格 = 最终订单支付金额/商品数量
+	4 订单改价：调整价格 > 订单价 ： 订单变成待审核状态，如何是正常逻辑，订单金额会变成负数，这里没有控制
+	场景：原订单价2200，商品550  》 订单改价  1000，优惠价1000 》 订单价变成 3200 商品价 800
+	2200.00000000	3200.00000000	-1000.00000000	3200.00000000	2200.00000000
+	select CONTRACT_INMONEY as "销售含税金额",CONTRACT_MONEY as "最终销售含税金额", GOODS_PMONEY as "总额优惠额",DATA_BMONEY as "结算金额",GOODS_MONEY as "最终商品含税金额"
+	from oc_contract where CONTRACT_BILLCODE = "2021042000000072";
+	-- 原因
+	1 后台计算逻辑有误
+	-- 解决方案
+	1 确认需求
+	2 最终订单支付金额 = 原订单支付金额 - 优惠金额
+	3 不需要修改(v1)
+	4 a 前台需要校验调整价格 < 订单价 ，整价格 = 订单价 是否可以要看客户需求，订单金额是否可以为0 ，免单 
+	  b 需客户确认需求，是否可为0，是否不能为负数
+	-- 解决过程 
+	1 oc.contract.updateContractSubMoneyByCodeSettl ：修改计算逻辑 v1 > 不改service逻辑 v2
+	2 前端传值：优惠价传负值 > subMoney = -1000 
+	subMoney=1000&remark=1&contractId=18240402
+	-- 需求
+	1 订单改价，用户端只需要展示在优惠金额里，不需要变更商品单价和商品小计价格
+	-- 解决方案
+	1 去掉计算contractGoodsPrice 订单商品单价逻辑 v1 > 不改service逻辑 v2
+	2 前端取值：pricesetNprice ，取商品原价
+	-- 解决过程
+	后天
+	Request URL: http://devpcb2b2020072700000001.xytest.qjclouds.com/web/oc/contract/getContractByCode.json?contractBillcode=2021040900000001
+	78 元   20	1060   1560
+	2021042000000019
+	`PRICESET_NPRICE` decimal(25,8) DEFAULT NULL COMMENT '当前价/挂牌价 原价'
+	pricesetNprice: 53
+	`CONTRACT_GOODS_PRICE` decimal(25,8) DEFAULT NULL COMMENT '优惠后单价',
+	contractGoodsPrice: 78
+	-- 确认结果
+	1 订单改价不能为负，可以为0 - 2021/4/21 李成瑜
+	
+	
+6 发票流程
+	-- 问题
+	1 前端不显示开票信息
+	-- 原因
+	1 前端没有调发票信息接口
+	-- 解决方案
+	1 a 前端调用发票接口 b 后台确认发票接口是否支持
+	-- 解决过程 OK
+	1 前端调用详情接口：传入参数userinvId
+	Request URL: https://www.yhp360.com/web/inv/userinv/getUserinv.json?userinvId=1020
+	2 前端从列表数据中获取
+	-- 需求：待确认
+	1 目前只支持开普特发票，需要支持开专票
+	-- 解决方案
+	1 待整理开票逻辑
+	-- 确认结果
+	1 专票先不管 - 2021/4/21 	李成瑜
+7 客户端账号13918780900，123456
+	-- 问题
+	1 账户资质无法显示
+	-- 原因
+	1 TypeError: Cannot read property 'userinfoapplyQuaVaule' of undefined
+	{e[t]=e.umUserinfoapplyQuaList.filter(e=>e.userinfoapplyQuaKey==t)[0].userinfoapplyQuaVaule||""})})
+	userinfoapplyQuaKey: "storeOpenTime"
+	
+	Uncaught (in promise) TypeError: Cannot read property '0' of undefined
+	userinfoCompname:e.list[0].userinfoCompname})
+	-- 测试
+	1 新用户，第一次申请资质，展示没有问题
+	2 多次申请，返回的数据结构没有变化
+8 登录权限
+	-- 权限接口
+	Request URL: https://admin.yhp360.com/web/mi/mindex/getTopPerMenuListFPc.json
+	
+	Request URL: https://admin.yhp360.com/web/up/role/updateRole.json
+	Request URL: https://admin.yhp360.com/web/up/role/saveRole.json
+	roleName: 用户中心 paramStr: [{"appmanageIcode":"001","menuCode":"00000296"}] opPermissionCode: 1200526 roleId: 1857
+9 商品主图
+Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/rs/resourceGoods/updateResGoodsFromXnEdit.json
+
+Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/rs/resourceGoods/getResGoodsFromXnEdit.json
+
+	-- 列表主图
+	Request URL: https://admin.yhp360.com/web/rs/resourceGoods/queryResourceGoodsPage.json
+	dataPic: "/paas/shop/2020072700000001/2021-04-26/4e79a25e6af249bcb1f36cc41e46036f.jpg"
+	-- sku主图
+	Request URL: https://admin.yhp360.com/web/rs/goodsFilesort/queryGoodsFilesortByPnTreeCode.json?pntreeCode=100000070
+	dataPic: "/paas/shop/2020072700000001/2021-04-26/8611a271ae294812bd57218d8f2d5fec.jpg"
+	-- 编辑主图
+	dataPic: "/paas/shop/2020072700000001/2021-04-26/4e79a25e6af249bcb1f36cc41e46036f.jpg"
+	
+	-- 第一个sku
+	dataPic: "/paas/shop/2020072700000001/2021-04-26/8611a271ae294812bd57218d8f2d5fec.jpg"
+	-- 问题
+	1 编辑页面应该取商品主图，但现在取得是第一个sku的主图
+-
+rsGoodsFileDomainList
+
+10 分类数据：classtreeCode
+	Request URL: https://www.yhp360.com/web/rs/rsGoodsClass/queryGoodsClassListNew.json
+	-- 
+	筛选条件没有生效
+11 支付方式
+	-- 订单详情接口
+	https://www.yhp360.com/web/oc/contract/getContractByCode.json
+	微信：fchannelCode: "wechatpc" 2 支付宝：fchannelCode: "alipaypc"
+12 满赠数量
+PmPromotionServiceImpl.makeShopGiftGoodsList
+麦迪康Medicom检查手套丁腈无粉指麻加强型1177	
+13 满赠下单
+商品sku信息有误
+14 返利设置
+15 菜单权限
+16 注册有礼
+17 组织管理
+
+
+2088421587687574
+
+

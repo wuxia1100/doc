@@ -1,0 +1,146 @@
+一：中台
+1 代金券
+	--新增
+	Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/pm/promotion/savePromotionCasheQuivalent.json
+	-- 列表
+	Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/pm/promotion/queryPromotionPageCasheQuivalent.json?pbCode=0003
+2 注册有礼
+	--新增
+	Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/tm/Proapp/queryProappEnvPageUser.json
+	Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/dis/channel/querySaleChannel.json
+	Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/um/userMerchant/queryUserMerchantPub.json
+	
+	-- 列表
+	Request URL: https://admin.yhp360.com/web/pm/promotionplat/queryCourtesyOfRegistrationPage.json
+
+	-- 保存新增
+	Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/pm/promotionplat/saveCourtesyOfRegistration.json
+	-- 编辑
+	Request URL: http://devcommerce2020072700000001.xytest.qjclouds.com/web/pm/promotionplat/queryCourtesyOfRegistrationPage.json
+3 修改价格
+	-- 保存修改
+	Request URL: https://admin.yhp360.com/web/oc/contract/updateContractSubMoneyBuiMat.json
+	subMoney=100&remark=11&contractId=18240406
+4 满赠活动
+	-- 新增
+	Request URL: https://admin.yhp360.com/web/pm/promotion/savePromotionFullGift.json
+	-- 列表
+	Request URL: https://admin.yhp360.com/web/pm/promotion/queryPromotionPageFullGift.json
+5 资质审核
+	-- 资质列表 
+	Request URL: https://admin.yhp360.com/web/um/qualityQtype/querySaveDealerQualityQtypePage.json
+	-- 保存审核
+	Request URL: https://admin.yhp360.com/web/um/userDealer/updateTUserinfoapplyStateStr.json
+	userinfoapplyId: 1883 memo: 11 qualityQtypeCodes: 98749 qualityQtypeNames: 二类04骨科手术器械 userinfoCode: 10000210359197
+6 订单
+	-- 查看
+	Request URL: https://admin.yhp360.com/web/oc/contract/getContractByBillcode.json?contractBillcode=2021042100000092
+7 服务
+	-- 评价
+	-- 列表
+	Request URL: https://admin.yhp360.com/web/res/evaluate/queryEvaluateGoodsForGoods.json
+	
+
+	evaluateGoodsShow: false
+	-- 隐藏
+	Request URL: https://admin.yhp360.com/web/res/evaluate/updateGoodsShow.json
+	evaluateGoodsId: 7000,show: false
+8 登录
+	-- 路由
+	Request URL: https://admin.yhp360.com/web/mi/mindex/getTopPerMenuListFPc.json
+
+9 权限
+	-- 新增角色
+	Request URL: https://admin.yhp360.com/web/up/role/saveRole.json
+	paramStr: [{"appmanageIcode":"001","menuCode":"00000296"}]
+10 信保
+	-- 列表
+	Request URL: https://admin.yhp360.com/web/crp/crpRecharge/queryCrpRechargePage.json
+	-- 确认充值
+	Request URL: https://admin.yhp360.com/web/crp/crpRecharge/updateCrpRecharge.json
+	rechargeId=87&rechargePeriod=&rechargeMoney=1000&rechargeName8=&rechargeName9=&rechargeName10=&rechargeState=2&rechargeUrl4=&tenantCode=2020072700000001
+
+	-- name = "pc根据登录用户获取信用额度信息"
+	https://admin.yhp360.com/web/crp/pcCrpRecharge/pcGetCrpURecharge.json
+	11101010350046
+	
+11 发票
+	-- 列表
+	Request URL: https://admin.yhp360.com/web/inv/userinv/queryUserinvPageToYY.json
+	`DATA_STATE` int(11) DEFAULT NULL COMMENT '状态 -1停用 0待审核 1审核通过 2审核失败（增票资质）',
+
+12 满赠活动
+	Request URL: https://admin.yhp360.com/web/pm/promotion/savePromotionFullGift.json
+	
+
+-------
+二：商城
+1 商品详情
+	Request URL: https://www.yhp360.com/web/rs/resourceGoods/getResourceGoodsInfoBySkuNo.json?skuNo=PMD05601
+	Request URL: https://www.yhp360.com/web/rs/rsPropertiesOption/queryRsPropOptFromXnEdit.json?propertiesCode=9544a564eec74edf9ececff5223dcfd1
+	-- 评价
+	Request URL: https://www.yhp360.com/web/res/evaluate/queryEvaluateGoodsPage.json
+2 商品列表
+	Request URL: https://www.yhp360.com/web/es/searchengine/find.json?page=1&rows=20&order=asc&sortField=&minPrice=1
+3 登录
+	Request URL: https://www.yhp360.com/web/ml/mlogin/loginIn.json
+	loginName=17100000001&passwd=123456
+	Request Method: POST
+	Content-Type: text/plain;charset=UTF-8
+4 分类查询
+	Request URL: https://www.yhp360.com/web/es/searchengine/find.json?page=1&rows=20&order=asc&sortField=&classtreeCode=2021022300000046&bizType=goods
+	page=1&rows=20&order=asc&sortField=&classtreeCode=2021022300000046&bizType=goods
+5 资质申请
+	Request URL: https://www.yhp360.com/web/um/userDistributorCon/saveTUserinfoApplyByDis.json
+	-- 资质申请记录
+	Request URL: https://www.yhp360.com/web/um/userDealer/queryUserinfoapplyPc.json
+6 开票信息
+	-- 列表
+	Request URL: https://www.yhp360.com/web/inv/userinv/queryUserinvPageByByMemberCode.json
+	notDataState=-1
+	-- 详情
+	Request URL: https://www.yhp360.com/web/inv/userinv/getUserinv.json?userinvId=1020
+	-- 保存
+	Request URL: https://www.yhp360.com//web/inv/userinv/saveUserinv.json
+	https://www.yhp360.com//web/inv/userinv/updateUserinv.json
+7 用户注册
+	Request URL: https://www.yhp360.com/web/ml/muser/saveUmuserPhone.json?userPhone=15026446937&code=084661&userPwsswd=123456&userinfoType=1&userName=15026446937
+8 信保账户
+	-- 列表
+	--
+	Request URL: https://www.yhp360.com/web/crp/pcCrpRecharge/pcGetCrpURecharge.json
+
+	`RECHARGE_ALLMONEY` decimal(15,8) DEFAULT NULL COMMENT '总额度',
+	`RECHARGE_SMONEY` decimal(15,8) DEFAULT NULL COMMENT '剩余额度',
+	已使用 = 总额度 - 剩余额度
+-- service
+    @ApiMethod(code="pm.channelsendBase.sendSaveMarketingPromotion",name="系统发放营销",paramStr="pbCode,skuBean,tenantCode",description="系统发放营销")
+
+
+9 下单
+	-- 立即结算
+	Request URL: https://www.yhp360.com/web/oc/shopping/queryShoppingToContract.json
+	Request URL: https://www.yhp360.com/web/um/address/queryAddressBymerberCode.json
+	Request URL: https://www.yhp360.com/web/crp/CrpUrecharge/checkCrpRecharge.json?userInfoCode=20000210346942
+	Request URL: https://www.yhp360.com/web/reb/upoints/queryUpointsPageStr.json
+	Request URL: https://www.yhp360.com/web/pte/pteptfchannel/getPtePtfchannelByBuyB.json
+	Request URL: https://www.yhp360.com/web/oc/contract/queryUserConByGoods.json
+
+	-- 下单
+	Request URL: https://www.yhp360.com/web/oc/contract/saveContract.json
+	
+	-- 立即下单
+	Request URL: https://www.yhp360.com/web/oc/shopping/queryToContractCodeList.json
+
+10 
+Request URL: http://devpcb2b2020072700000001.xytest.qjclouds.com/web/um/userDistributorCon/saveTUserinfoApplyByDis.json
+Request URL: http://devpcb2b2020072700000001.xytest.qjclouds.com/web/um/userSupplier/supplierJudgeRegister.json?userinfoCompname=afaf
+
+11 新增子账户
+Request URL: https://www.yhp360.com/web/um/userMerchant/saveOperatorByDealer.json?userName=1&userPhone=15026446937
+12 -- 支付
+Request URL: https://www.yhp360.com/web/pte/pay/paymentCommit.json
+ptradeSeqno: 20210430000000029
+payCommitStr: [{"faccountIdType":"ACCOUNT","orderAmount":660}]
+contractBlance: 0
+paywd: 123456

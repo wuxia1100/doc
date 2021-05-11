@@ -1,0 +1,283 @@
+1 订单驳回-- 重新提审
+	-- 修改订单状态
+	Request URL: http://upptestadmin.uniview.com/web/oc/contract/updateOcontractStateRate.json
+	-- 重新推送审批流
+	Request URL: http://upptestadmin.uniview.com/web/oc/contractEngine/sendContractNextCT.json
+	ocContractServiceRepository.updateCancellationOrder(tenantCode, contractBillcode, 2, 8);
+	contractBillcode: 2021050600000003
+	-- 审批流
+	1 推送审批流：oc.contractEngine.sendActivitiData > 封装actCommon，没有数据库操作
+	2 审批流回调：actCommonDomain.setCallUrl("oc.send.updateAuditCall");
+	3 激活审批流：this.internalInvoke("act.actCommonService.activateProcess", paramMap); > 审批流模块 1 封装actCommon，审批流信息 > 激活审批流
+	
+	-- 审批数据
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/queryHiTaskInst.json
+	-- 保存审批
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/saveTask.json
+	taskId=606971&auditStatus=YES&auditRemark=11
+	-- 领取任务
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/claimTask.json?taskId=606971
+	-- 审批详情
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json?processId=606924&taskId=606939&fileName=1&type=1
+
+	2021031700000040
+2 订单提审
+	Request URL: http://upptestadmin.uniview.com/web/oc/contract/updateOcontractStateRate.json
+	-- 查询员工
+	http://upptestadmin.uniview.com/web/ct/custrel/queryCustrelEmpPage.json
+	http://upptestadmin.uniview.com/web/org/employee/queryEmployeePage.json?notDepartFlag=1
+2021042800000152
+
+-- v2
+2021012200000001
+3 下单
+	-- v1
+	不计算库存
+	订单待支付
+	订单结算
+	-- v2
+	库存
+	订单待支付
+	订单结算
+4 提交审核
+	-- v1
+	支付
+	提交审批流
+	-- v2
+	支付
+	提交审批流
+	核减仓库库存
+5 重新提交
+	-- v1
+	发货
+	-- v2
+	发货
+	审批流重推
+	核减仓库库存
+	订单已发货
+	推送发货单
+	分销结算到余额
+6 异常	
+dis.contract.updateContractStateByCode
+1 订单驳回-- 重新提审
+	-- 修改订单状态
+	Request URL: http://upptestadmin.uniview.com/web/oc/contract/updateOcontractStateRate.json
+	-- 重新推送审批流
+	Request URL: http://upptestadmin.uniview.com/web/oc/contractEngine/sendContractNextCT.json
+	contractBillcode: 2021050600000003
+	-- 审批流
+	1 推送审批流：oc.contractEngine.sendActivitiData > 封装actCommon，没有数据库操作
+	2 审批流回调：actCommonDomain.setCallUrl("oc.send.updateAuditCall");
+	3 激活审批流：this.internalInvoke("act.actCommonService.activateProcess", paramMap); > 审批流模块 1 封装actCommon，审批流信息 > 激活审批流
+	
+	-- 审批数据
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/queryHiTaskInst.json
+	-- 保存审批
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/saveTask.json
+	taskId=606971&auditStatus=YES&auditRemark=11
+	-- 领取任务
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/claimTask.json?taskId=606971
+	-- 审批详情
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json?processId=606924&taskId=606939&fileName=1&type=1
+
+	2021031700000040
+2 订单提审
+	Request URL: http://upptestadmin.uniview.com/web/oc/contract/updateOcontractStateRate.json
+	-- 查询员工
+	http://upptestadmin.uniview.com/web/ct/custrel/queryCustrelEmpPage.json
+	http://upptestadmin.uniview.com/web/org/employee/queryEmployeePage.json?notDepartFlag=1
+2021042800000152
+
+-- v2
+2021012200000001
+3 下单
+	-- v1
+	不计算库存
+	订单待支付
+	订单结算
+	-- v2
+	库存
+	订单待支付
+	订单结算
+4 提交审核
+	-- v1
+	支付
+	提交审批流
+	-- v2
+	支付
+	提交审批流
+	核减仓库库存
+5 重新提交
+	-- v1
+	发货
+	-- v2
+	发货
+	审批流重推
+	核减仓库库存
+	订单已发货
+	推送发货单
+	分销结算到余额
+6 异常	
+dis.contract.updateContractStateByCode
+1 订单驳回-- 重新提审
+	-- 修改订单状态
+	Request URL: http://upptestadmin.uniview.com/web/oc/contract/updateOcontractStateRate.json
+	-- 重新推送审批流
+	Request URL: http://upptestadmin.uniview.com/web/oc/contractEngine/sendContractNextCT.json
+	contractBillcode: 2021050600000003
+	-- 审批流
+	1 推送审批流：oc.contractEngine.sendActivitiData > 封装actCommon，没有数据库操作
+	2 审批流回调：actCommonDomain.setCallUrl("oc.send.updateAuditCall");
+	3 激活审批流：this.internalInvoke("act.actCommonService.activateProcess", paramMap); > 审批流模块 1 封装actCommon，审批流信息 > 激活审批流
+	
+	-- 审批数据
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/queryHiTaskInst.json
+	-- 保存审批
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/saveTask.json
+	taskId=606971&auditStatus=YES&auditRemark=11
+	-- 领取任务
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/claimTask.json?taskId=606971
+	-- 审批详情
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json?processId=606924&taskId=606939&fileName=1&type=1
+
+	2021031700000040
+2 订单提审
+	Request URL: http://upptestadmin.uniview.com/web/oc/contract/updateOcontractStateRate.json
+	-- 查询员工
+	http://upptestadmin.uniview.com/web/ct/custrel/queryCustrelEmpPage.json
+	http://upptestadmin.uniview.com/web/org/employee/queryEmployeePage.json?notDepartFlag=1
+2021042800000152
+
+-- v2
+2021012200000001
+3 下单
+	-- v1
+	不计算库存
+	订单待支付
+	订单结算
+	-- v2
+	库存
+	订单待支付
+	订单结算
+4 提交审核
+	-- v1
+	支付
+	提交审批流
+	-- v2
+	支付
+	提交审批流
+	核减仓库库存
+5 重新提交
+	-- v1
+	发货
+	-- v2
+	发货
+	审批流重推
+	核减仓库库存
+	订单已发货
+	推送发货单
+	分销结算到余额
+6 异常	
+dis.contract.updateContractStateByCode
+
+Request URL: http://upptestadmin.uniview.com/web/oc/empshopping/addShoppingGoodsCode.json
+
+
+SELECT * FROM um_user where USER_CODE = "2021010700000079";
+-- 范查
+SELECT * from oc_cflow_pprocess ORDER BY CFLOW_PPROCESS_ID DESC LIMIT 20;
+SELECT * FROM oc_cflow_node where CFLOW_CODE = "001" and TENANT_CODE = "2020050600004084" ORDER BY CFLOW_NODE_ID desc ;
+SELECT * from oc_cflow_pservice  order by CFLOW_PSERVICE_ID desc;
+SELECT * from oc_contract_ctrl ORDER BY CONTRACT_CTRL_ID desc LIMIT 20;
+SELECT * from oc_contract ORDER BY CONTRACT_ID desc limit 20;
+SELECT * from oc_cflow_pprocess where CFLOW_NAME like "%审批%" ORDER BY CFLOW_PPROCESS_ID DESC LIMIT 200;
+SELECT * from oc_cflow_pprocess where CONTRACT_BILLCODE = "2021031700000087";
+-- 精查
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "PO5" and CFLOW_CODE = "001" and TENANT_CODE = "2020050600004084";
+SELECT * from oc_cflow_node where CFLOW_NODE_NEXTCODE = "A001" ;
+SELECT * from oc_cflow_node where CFLOW_CODE = "PO5" ;
+SELECT * from oc_contract_ctrl where CONTRACT_BILLCODE = "2021050600000020";
+SELECT * from oc_cflow_pprocess where CONTRACT_BILLCODE = "2021050600000020";
+SELECT * from oc_cflow_pprocess where CFLOW_PPROCESS_CODE = "424527723008884736";
+SELECT fs.* from oc_cflow_pprocess  fp
+LEFT JOIN oc_cflow_pservice fs on fs.CFLOW_PSERVICE_CODE = fp.CFLOW_PSERVICE_CODE
+where fp.CFLOW_PPROCESS_CODE in (
+SELECT CFLOW_PPROCESS_CODE from oc_contract_ctrl where CONTRACT_BILLCODE = "2021050600000020");
+SELECT * from oc_cflow_pservice where CFLOW_PSERVICE_CODE = "PO6";
+SELECT * from oc_cflow_pservice where CFLOW_PSERVICE_CODE in ("PO3","P36","pteList","PO5","A001","A002","PO6","A001","A002","P37","P26","P101");
+SELECT cp.* from oc_cflow_pprocess cp
+LEFT JOIN oc_cflow_pservice cs on cp.CFLOW_PSERVICE_CODE = cs.CFLOW_PSERVICE_CODE
+LEFT JOIN  oc_cflow_node cn on cp.CFLOW_NODE_CODE = cn.CFLOW_NODE_CODE
+LEFT JOIN oc_contract_ctrl cc on cp.CONTRACT_CTRL_SEQNO = cc.CONTRACT_CTRL_SEQNO
+where cp.CONTRACT_BILLCODE = "2021031700000087" ORDER BY cp.CFLOW_PPROCESS_ID desc
+;
+SELECT cn.* from oc_cflow_pprocess cp
+LEFT JOIN oc_cflow_pservice cs on cp.CFLOW_PSERVICE_CODE = cs.CFLOW_PSERVICE_CODE
+LEFT JOIN  oc_cflow_node cn on cp.CFLOW_NODE_CODE = cn.CFLOW_NODE_CODE 
+LEFT JOIN oc_contract_ctrl cc on cp.CONTRACT_CTRL_SEQNO = cc.CONTRACT_CTRL_SEQNO
+where cp.CONTRACT_BILLCODE = "2021050600000003"  and cn.TENANT_CODE = "2020050600004084"
+ORDER BY cp.CFLOW_PPROCESS_ID desc
+;
+SELECT cn.CFLOW_NODE_NAME,cn.CFLOW_NODE_CODE,cn.CFLOW_NODE_PARENTCODE,cn.CFLOW_NODE_NEXTCODE,
+cn.CFLOW_NODE_START,cp.GMT_CREATE,cn.CFLOW_NODE_INDEX ,cp.DATA_STATE,cn.CFLOW_NODE_CALLCON,cn.CFLOW_NODE_CONDITION
+from oc_cflow_pprocess cp
+LEFT JOIN oc_cflow_pservice cs on cp.CFLOW_PSERVICE_CODE = cs.CFLOW_PSERVICE_CODE
+LEFT JOIN  oc_cflow_node cn on cp.CFLOW_NODE_CODE = cn.CFLOW_NODE_CODE
+LEFT JOIN oc_contract_ctrl cc on cp.CONTRACT_CTRL_SEQNO = cc.CONTRACT_CTRL_SEQNO
+where cp.CONTRACT_BILLCODE = "2021050600000010"  and cn.TENANT_CODE = "2020050600004084"
+ORDER BY cp.CFLOW_PPROCESS_ID desc
+-- 查询具体流程节点
+SELECT * from oc_cflow_node where CFLOW_NODE_CODE = "58411" and cflow_code = "001";
+-- 1
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "PO31" and cflow_code = "001" and TENANT_CODE = "2020050600004084" and DATA_STATE = 1;
+-- 2
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "PO01" and cflow_code = "001" and TENANT_CODE = "2020050600004084" and DATA_STATE = 1;
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "P36" and cflow_code = "001" and TENANT_CODE = "2020050600004084" and DATA_STATE = 1;
+-- 3
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "A001" and cflow_code = "001" and TENANT_CODE = "2020050600004084" and DATA_STATE = 1;
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "pteList" and cflow_code = "001" and TENANT_CODE = "2020050600004084" and DATA_STATE = 1;
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "PO6" and cflow_code = "001" and TENANT_CODE = "2020050600004084" and DATA_STATE = 1;
+-- 4
+SELECT * from oc_cflow_node where CFLOW_NODE_PARENTCODE = "A002" and cflow_code = "001" and TENANT_CODE = "2020050600004084" and DATA_STATE = 1;
+
+SELECT * from am_appwar_jar where APPMANAGE_ICODE like "%oc%";
+
+
+SELECT * from oc_cflow_pservice where data_callurl = "dis.contract.updateContractStateByCode";
+SELECT * from am_appapi where APPAPI_CODE = "dis.contract.updateContractStateByCode";
+
+ -- 缓存
+ parkey = ocCflowNode.getCflowCode() + "-" + ocCflowNode.getCflowNodeParentcode() + "-" + ocCflowNode.getTenantCode();
+            
+ List<OcCflowNodeReDomain> ocCflowNodeList = (List<OcCflowNodeReDomain>) 
+ DisUtil.getMapListJson(OcCflowServiceImpl.CACHE_KEY_PARENTCFLOWNODE, cflowCode + "-" + cflowNodeNextcode + "-"+ tenantCode,
+ OcCflowNodeReDomain.class);
+
+ -- 缓存
+ parkey = ocCflowNode.getCflowCode() + "-" + ocCflowNode.getCflowNodeParentcode() + "-" + ocCflowNode.getTenantCode();
+            
+ List<OcCflowNodeReDomain> ocCflowNodeList = (List<OcCflowNodeReDomain>) 
+ DisUtil.getMapListJson(OcCflowServiceImpl.CACHE_KEY_PARENTCFLOWNODE, cflowCode + "-" + cflowNodeNextcode + "-"+ tenantCode,
+ OcCflowNodeReDomain.class);
+
+ -- 缓存
+ parkey = ocCflowNode.getCflowCode() + "-" + ocCflowNode.getCflowNodeParentcode() + "-" + ocCflowNode.getTenantCode();
+            
+ List<OcCflowNodeReDomain> ocCflowNodeList = (List<OcCflowNodeReDomain>) 
+ DisUtil.getMapListJson(OcCflowServiceImpl.CACHE_KEY_PARENTCFLOWNODE, cflowCode + "-" + cflowNodeNextcode + "-"+ tenantCode,
+ OcCflowNodeReDomain.class);
+ 
+ 
+"PO3","P36","pteList","PO5","A001","A002","PO6","A001","A002","P37","P26","P101"
+-- 新建 ：58411 AU
+1 0
+-- 提审：58421 AN
+2 0
+-- 拒绝：58421 CT	
+8	2
+--
+2	0
+-- 通过：00113 AN

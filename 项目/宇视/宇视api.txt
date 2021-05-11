@@ -1,0 +1,149 @@
+1 用户数据权限 ：queryUserinfoservicePage
+Request URL: http://upptestadmin.uniview.com/web/um/userserviceinfo/queryUserinfoservicePage.json?userinfoBtate=0
+params:rows=10&page=1&opdatascsType=um_userinfo&userinfoQuality=dealer
+model:controller-um
+
+2 商品导入
+	releaseResourceGoods
+3 仓库国家添加
+	saveUserwhs
+4 杭州总部
+	queryDepartPagebyPcode
+5 渠道中心：商品搜索重复
+http://upptestadmin.uniview.com/web/rs/sku/querySkuPage.json?rows=5&page=1&goodsType=00&
+channelCode=2021032500010648&dataOpbillstate=1&goodsName=2115C0BE
+
+6 上架
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/updateGoodsUpForUser.json
+goodsIdStr: 538389
+下架
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/updateGoodsDownForUser.json
+goodsIdStr=538389
+7 渠道推商品
+	saveDgoodsScopeListSale
+9 国家渠道
+商品发布设置
+Request URL: http://upptestadmin.uniview.com/web/dis/dgoods/saveDgoodsSale.json
+规则生效
+Request URL: http://upptestadmin.uniview.com/web/dis/channel/saveChannelEx.json
+rs.resource.sendUpdateChannelGoods
+所有国家渠道
+Request URL: http://upptestadmin.uniview.com/web/dis/channel/queryChannelPageBySS.json
+rows=10&page=1&channelType=8
+所有国家渠道已推商品
+Request URL: http://upptestadmin.uniview.com/web/dis/dgoods/queryDgoodsScopelistPage.json
+rows=5&page=1&goodsType=00&channelCode=2021032500010648&dataOpbillstate=1&goodsName=aaaa&skuNo=aaaaaa
+国家渠道可推商品
+Request URL: http://upptestadmin.uniview.com/web/rs/sku/querySkuPage.json?rows=5&page=1&goodsType=00&channelCode=2021032500010648&dataOpbillstate=1
+
+1 主页查询：当前国家已推（可销售）哪些商品
+Request URL: http://upptestadmin.uniview.com/web/dis/dgoods/queryDgoodsScopelistPage.json
+
+2 可推商品查询：当前国家渠道，可以选择哪些商品进行销售
+Request URL: http://upptestadmin.uniview.com/web/rs/sku/querySkuPage.json?rows=5&page=1&goodsType=00&channelCode=2021032500010648&dataOpbillstate=1&skuNo=0236C02U&goodsName=GV-EBD4711-04
+rows=5&page=1&goodsType=00&channelCode=2021032500010648&dataOpbillstate=1&skuNo=0236C02U&goodsName=GV-EBD4711-04
+渠道客户
+Request URL: http://upptestadmin.uniview.com/web/dis/channel/queryChannelPageBySS.json
+rows=10&page=1&opdatascsType=dis_channel&channelType=0&channelSort=2
+渠道客户商品
+Request URL: http://upptestadmin.uniview.com/web/dis/dprice/queryDpricePageBySS.json
+rows=10&page=1&opdatascsType=dis_dprice&channelSort=2
+10 原型机查询
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPageStr.json
+11 下单商品查询
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPagePaltStr.json
+12 客户渠道
+所有客户渠道
+Request URL: http://upptestadmin.uniview.com/web/dis/channel/queryChannelPageBySS.json
+客户渠道已推商品
+Request URL: http://upptestadmin.uniview.com/web/dis/dgoods/queryDgoodsScopelistPage.json
+客户渠道可推商品
+Request URL: http://upptestadmin.uniview.com/web/dis/dgoods/queryDgoodsScopelistPage.json?rows=5&page=1&goodsType=00&channelCode=2021012900000034
+
+12 商品
+	1 商品分类
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/saveClasstree.json
+	classtreeName=test343&memo=sdfs&classtreeParentcode=-1&Visible=false&classtreeLast=1&classtreeType=0
+	2 商品类型
+	查询
+	Request URL: http://upptestadmin.uniview.com/web/rs/pntree/queryPntreePage.json
+	新增类型
+	Request URL: http://upptestadmin.uniview.com/web/rs/pntree/savePntree.json
+	pntreeName=goodsType&brandCodeStr=2020082800000071&specGroupCodeStr=434711469620199424
+	查询所有规格组
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/listSpecGroupQueryFromPntree.json
+	3 商品规格
+	规格组
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/saveSpecGroup.json?specGroupName=%E8%A7%84%E6%A0%BC%E7%BB%84&memo=
+	specGroupName=%E8%A7%84%E6%A0%BC%E7%BB%84&memo=
+	规格信息
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/saveSpec.json
+	specGroupCode=434711469620199424&specName=%E8%A7%84%E6%A0%BC%E4%BF%A1%E6%81%AF&specDefault=0&memo=
+	规格选项
+	Request URL: http://upptestadmin.uniview.com/web/rs/specOption/saveSpecOption.json?specCode=434712010060464128&specOptionName=%E8%A7%84%E6%A0%BC%E9%80%89%E9%A1%B92&specGroupCode=434711469620199424&specOptionNum=222	
+	specCode=434712010060464128&specOptionName=%E8%A7%84%E6%A0%BC%E9%80%89%E9%A1%B92&specGroupCode=434711469620199424&specOptionNum=222
+	4 商品品牌
+	Request URL: http://upptestadmin.uniview.com/web/rs/brand/saveBrand.json
+	brandName=%E5%AE%87%E8%A7%86&brandCode=&delivery=false&brandLogo=%2Fpaas%2Fshop%2F2020050600004084%2F2021-04-14%2F48a673f645bc4474b59c08e4a8a9fdd7.jpg&Visible=false&memo=%E9%98%BF%E6%96%AF%E8%92%82%E8%8A%AC
+	5 商品参数
+	所有参数
+	Request URL: http://upptestadmin.uniview.com/web/rs/pntree/queryPntreeTree.json
+	参数属性
+	Request URL: http://upptestadmin.uniview.com/web/rs/prop/queryPropertiesPage.json?pntreeCode=100000502&propertiesType=1
+	pntreeCode=100000502&propertiesType=1
+	新增参数属性
+	Request URL: http://upptestadmin.uniview.com/web/rs/prop/saveProp.json?propertiesName=params1&pntreeCode=100000502&propertiesType=1
+	propertiesName=params1&pntreeCode=100000502&propertiesType=1
+13 商品发布
+	1 商品发布会在表里新增一条商品数据，也会新增一条sku数据
+校验产品周期
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/checkResourceGoodsToGoodsSpec.json
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/saveResourceGoods.json
+Request URL: http://upptestadmin.uniview.com/web/rs/sku/querySkuFromTcToSkuNoStr.json
+商品列表查询
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPagePaltStr.json
+
+Request URL: http://upptestadmin.uniview.com/web/wh/opstore/saveSkuToStore.json
+14添加原型机
+1 保存商品: 源头处理渠道,
+2 保存规格spu
+3 保存属性
+4 保存商品关联信息（如果有）
+5 保存商品附件
+6 保存sku（原型机添加时，sku只有基本信息只能通过goods_CODE查询到，没有sku_no等数据）
+7 保存商品分类
+8 保存商品仓库信息		
+添加
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/saveResourceGoods.json
+校验
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/checkResourceGoodsToGoodsSpec.json
+查询
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPageStr.json
+14 查询erp
+Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryErpBaseResourceGoods.json
+
+15 组织部门
+查询部门	
+Request URL: http://upptestadmin.uniview.com/web/org/company/getCompanyByCompanyCode.json?companyCode=20000210314491
+添加部门
+Request URL: http://upptestadmin.uniview.com/web/org/depart/saveDepartAndSaveUser.json  organize
+companyCode=20000210314491&departPcode=e86505c9e7fe443b82ed750cb00d398e&departPname=&departName=%E5%8C%97%E4%BA%AC2&userinfoSort=5
+
+16 添加客户
+Request URL: http://upptestadmin.uniview.com/web/um/userDealer/saveUserDealerForPlatStr.json
+
+17 登录
+Request URL: http://upptestadmin.uniview.com/web/ml/mlogin/loginIn.json
+loginName=testp&passwd=MTIzNDU2&code=1234
+
+Request URL: http://upptestadmin.uniview.com/web/mi/mindex/getTopPerMenuListFPc.json
+Request URL: http://upptestadmin.uniview.com/web/um/userservice/getUserserviceInfo.json?userId=410294
+18 订单提审
+Request URL: http://upptestadmin.uniview.com/web/oc/contract/updateOcontractStateRate.json
+19 代客下单
+Request URL: http://upptestadmin.uniview.com/web/oc/empcontract/saveContractRule.json
+20 借货申请
+Request URL: http://upptestadmin.uniview.com/web/crms/sorder/saveSOrderRule.json
+21 新增量价活动：
+Request URL: http://upptestadmin.uniview.com/web/pm/promotionplat/savePromotionFullSubStr.json
+

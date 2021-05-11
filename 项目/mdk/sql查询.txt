@@ -1,0 +1,19 @@
+-- 营销
+#1 活动模板
+SELECT * FROM `pm_promotion` where PROMOTION_CODE = "2021042200000015";
+#2 活动范围
+SELECT * from pm_promotion_rangelist where PROMOTION_CODE = "2021042200000015";
+#3 活动有哪些券可以领
+SELECT * from pm_promotion_coupon where PROMOTION_CODE = "2021042200000015";
+#4 活动对象
+SELECT * from pm_promotion_targetlist where PROMOTION_CODE = "2021042200000015";
+#5 活动终端
+SELECT * from pm_promotion_terminal where PROMOTION_CODE = "2021042200000015";
+#6 活动有哪些券可以领
+SELECT * from pm_promotion_discount WHERE PROMOTION_CODE = "2021042200000015";
+#7
+SELECT * from pm_promotion_discountlist where PROMOTION_CODE = "2021042200000015"; 
+
+SELECT * from pm_promotion_in where PROMOTION_CODE = "2021013100000068";
+
+INSERT INTO `qjpaas-all`.`um_usersend_api` (`USERSEND_API_ID`, `USERSEND_API_CODE`, `USERSEND_API_TYPE`, `USERSEND_API_APICODE`, `USERSEND_API_NAME`, `MEMBER_CODE`, `MEMBER_NAME`, `MEMO`, `DATA_CALLTYPE`, `DATA_CALLVER`, `DATA_PARAM`, `DATA_COM`, `DATA_FLAG`, `TENANT_CODE`, `DATA_STATE`, `GMT_CREATE`, `GMT_MODIFIED`) VALUES ('99', 'API021', 'disCoupon', 'pm.channelsendBase.sendUsercertify', '认证有礼', NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2020072700000001', '0', NULL, NULL);

@@ -1,0 +1,766 @@
+1 springboot 集成 mybatis：1 注解开发 2 XML文件开发
+	1 引入mybatis依赖的jar包 ，有多个版本
+		<groupId>org.mybatis.spring.boot</groupId>
+        <artifactId>mybatis-spring-boot-starter</artifactId>
+        <version>1.2.0</version>
+	2 配置mybatis文件的扫描路径
+		mybatis:
+			typeAliasesPackage: org.cv.sf.repository.mybatis
+			mapperLocations: classpath:mapper/*.xml
+		1 java文件的扫描：这个可以不要，因为下面开启了MapperScan扫描注册IOC容器了，相当于重复了吧
+		2 XML文件的扫描：这个如果没有，会报一个绑定异常的错，也就是接口的方法绑定不了一个具体实现、
+			org.apache.ibatis.binding.BindingException: Invalid bound statement (not found): 
+			org.cv.sf.repository.mybatis.FileMapper.findById] with root cause
+	3 springboot扫描注册：应该是注册到iOS容器，方便使用
+		@MapperScan("org.cv.sf.repository.mybatis")
+		1 File findById(@Param("id")int id);
+		2 如果不开启这个扫描，IOC容器是无法注册这个对象的也就无法使用
+		3 至于它是如何把一个接口，创建一个实现对象的那就是框架的底层具体实现了
+	4 XML文件的编写
+		1 <mapper namespace="org.cv.sf.repository.mybatis.FileMapper">
+		2 <resultMap id="BaseResultMap" type="org.cv.sf.entity.File">
+		3    <select id="findById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+				SELECT * FROM LIN_FILE WHERE ID = #{id}
+			 </select>
+	
+	5 使用
+		1 分页
+		2 复杂查询
+	6 注解开发
+		1 在类上打上mapper注解
+		2 在方法上使用增删改查注解
+	7 继承 mybatis-plus
+		1 mybatis-plus 是对mybatis的增强封装，是在mybatis的基础上
+		2 使用mybatis-plus的依赖jar就不需要再引用mybatis的依赖
+		3  <groupId>com.baomidou</groupId>
+            <artifactId>mybatis-plus-boot-starter</artifactId>
+            <version>3.3.0</version>
+		4 使用
+			1 public interface FileMapper extends BaseMapper<FileDO>
+			继承一个BaseMapper，这个和jpa很相似
+			2 实体类上不能加上@entity的注解,这是jpa持久化的注解
+			3 要使用basemapper里实现的方法，否则就会报绑定异常，没有具体的方法实现
+			4 @TableName 注解而不是jpa里的@Table注解
+	8 总结
+		1 springboot 集成时需要有一个扫描注册IOC的动作
+2 springboot 集成 hibernate
+	1 持久性框架，全自动的ORM框架，不需要关心SQL的编写，实现了jpa的规范，springboot中，jpa的默认实现就是hibernate
+		Hibernate 是一个高性能的对象/关系映射（ORM）持久化存储和查询的服务，不仅负责从Java类到数据库表的映射 
+		（还包括从Java数据类型到SQL数据类型的映射），还提供了面向对象的数据查询检索机制
+	2jar包可以用spring data jpa 的jar，因为底层就是hibernate
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+	3 实体类的ORM 映射注解
+	4 dao 操作使用的是EentityManager,这个类里封装了所以对数据库的操作
+	5 使用时要加上事物 @Transactional 不然就没有事物
+3 Springbooot 继承jpa
+	1 引用jar
+	            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-jpa</artifactId>
+	2 实体映射 在实体上加@entity @id 等 ORM注解
+	3 dao extends JpaRepository ：里面封装了很多简单的对数据库的操作
+	4 jpa可以根据方法名映射成SQL语句，只要遵循jpa的方法名和SQL语句映射规则
+	5 可以在方法上写原生SQL或者hql,@Query注解
+3 集成JDBC
+  1 ResultSet PreparedStatement，最原生的这两个jdbc类每一次使用太过麻烦，所以一般会进行封装，更好用一点，而不是直接操作这两个类
+  2 我们都知道使用原始的JDBC在操作数据库是比较麻烦的，所以Spring为了提高开发的效率，顺带着就把JDBC封装、改造了一番，
+    而JdbcTemplate就是Spring对原始JDBC封装之后提供的一个操作数据库的工具类。
+	Tips:凡是我们看到xxxTemplate的类，都是Spring对xxx的封装的模板类。
+  3 使用工具类里的方法就可以
+	1 NamedParameterJdbcTemplate 对于参数和SQL语句的重新构造更方便一点,采用的map集合和':',替换的方式
+	2 JdbcTemplate 采用的是？占位符替换，PreparedStatementSetter ，重写setValue方法，创建PreparedStatement 对象的方式
+	重构SQL语句相对复杂一点
+	  遇到一个坑，就是查询单条的时候用PreparedStatementSetter 替换会出问题，不知道啥问题
+4 集成测试
+	1 JUNIT jar 包，springboot test 包内包含
+	<groupId>org.springframework.boot</groupId>
+		<artifactId>spring-boot-starter-test</artifactId>
+    <scope>test</scope>
+	2 在方法上加上@Test 注解就可以直接启动方法
+	3 springboot 测试
+		1 @RunWith(SpringRunner.class)
+			@SpringBootTest(classes = studyJpaApplication.class)
+		2 要加上这两个注解，这样才能使用spring的IOC容器DI依赖注入
+		
+5 创建web项目
+	1 什么是web项目，带有JSP页面的就是？
+6 HTML 和 jsp 和 themleaf
+	1 三者最后展示给浏览器的都是HTML页面，只不过后两者是动态处理后的HTML，会根据获取的数据替换页面上的变量值
+	 HTML是标记性语言，是不能写入变量值，替换变量值得
+	2 Html属于静态语言，静态语言中是不能定义变量的；要定义变量可通过引入脚本定义，例如js，通过var定义变量；
+	然后通过获取HTML的DOM节点来赋值
+	3 存在变量的就是动态语言，HTML没有
+	4 而动态打开展示的是后台传过来的数据，不再展示标签内的数据，这就很好的做到了前后端分离，
+	 和jsp大同小异，用SpringBoot的话就不要用jsp了，虽然可以用，但是官方不推荐
+7 前后端分离
+	1 Vue 和 后台 是前后端分离，但是如果Vue和后台都是同一个程序员来写，就不是前后端分离
+	只是Vue和后台这种架构可以很好的适用于前后端分离的开发模式，但不一定一定要这么去做
+	前后端分离是工作模式需要，就产生了前后端分离的项目架构模式，两者都具备才算真正意义上的前后端分离
+	项目架构满足了工作模式
+	2 项目架构不满足，就无法前后端分离？也不一定，HTML，css,js由一个人写，后台逻辑由另外一个人写
+	这种工作模式就是前后端分离，只不过这样的开发，工作模式会遇到很多问题，交互很多，效率很低，对于两个人的要求
+	都很高，这就提高了开发成本，极大的浪费成本，没有意义的交流
+	3 好的前后端分离架构，可以提高前后端开发，工作模式的效率，让前端专心搞前端，后台专心写后台
+	没有过多的交流成本，自己的效率也很高，问题也很少，这样项目的效率和成本就会大大提高
+	4 所以前后端分离的交界点，交互点，交接点，在于数据传输，也就是request请求，
+	前端只需要后台的接口，后台只需要提供给前端接口
+	5 前后端必须大于两个人，只有一个人的开发就不是真正的前后端分离，即使项目架构再适用于前后端分离的架构，
+	再能提高前后端分离的效率，也不算
+8 springboot 集成 thymeleaf
+	1 引入springboot web依赖,引入thymeleaf 依赖
+	2 在resource下创建springboot默认的页面存放路径文件夹名称：templates
+	3 在templates 文件夹下创建index.html 页面
+	4 启动项目 浏览器 访问 localhost:8080  就可以成功访问index.html
+	5 配置自定义页面文件存放路径：spring.thymeleaf.prefix: classpath:/public/templates/ 
+		注意：最后还要有一个/，路径分隔符：报错 Error resolving template [home], template might not exist
+	6 controller：返回home页面		
+		@Controller
+		public class HomeController {
+		@RequestMapping(value = "home")
+		public String home(){
+			return "home";
+		}
+		}
+9 响应式布局
+	1 就是一个网站能够兼容多个终端
+	
+
+10 集成 shiro
+1 注解配置
+<dependency>
+<groupId>org.apache.shiro</groupId>        
+<artifactId>shiro-spring-boot-web-starter</artifactId>       
+<version>1.4.0</version>   
+</dependency>
+2 编写java类
+
+<dependency>
+<groupId>org.apache.shiro</groupId>
+<artifactId>shiro-web</artifactId>
+<version>1.4.0</version>
+</dependency>
+
+    
+<dependency>
+<groupId>org.apache.shiro</groupId>
+<artifactId>shiro-spring</artifactId>        
+<version>1.4.0</version>
+</dependency>
+
+3 添加了shiro依赖必须初始化一个shiroReam ,不然项目无法启动
+4 集成了shiro,shiro的默认拦截器就会生效，即使不做任何配置，也有拦截器在起作用，默认拦截规则，所以的路径访问都会被拦截
+
+11 springboot 访问静态资源
+	1 springboot 默认的4个静态资源存放路径 在resources 下，public，static resources ，META-INFO.resources
+	2 访问静态资源 不需要再带上文件夹的名字作为路径，只需要文件名就行，但是静态资源要带上后缀：.html .jpg 过滤也是根据后缀过滤
+	3 	spring.resources.static-locations: classpath:/public/template/
+		spring.mvc.static-path-pattern: /static/**、
+	4 静态资源存放目录：spring.resources.static-locations，配置了这个目录，springboot默认的静态资源目录就失效，访问方式同样不需要
+	带上目录的文件路径，直接访问文件名就可以  ：http://localhost:8081/login.html ，例如这个页面，中间不需要额外的文件夹路径
+	加了就访问不到
+	5 静态资源访问路径：spring.mvc.static-path-pattern:配置了这个路径，所有的存放在静态资源目录下资源访问，路径都要加上这个
+	http://localhost:8081/static/login.html：配置了static，访问时就要路径中就要加上，不然就找不到
+	6 不配置存放目录就要存放在springboot默认的文件下，不然就访问不了，配置了访问路径就要用，springboot默认的方式就失效了
+	7 如果配置的存放目录下，还存在下一级目录机构，配置了访问路径，那么访问方式就是在：访问路径后+目录结构+文件
+	http://localhost:8081/static/user/userList.html：例如template，下还有user文件夹
+	8 静态资源访问的本质：就是返回io流，指定解析请求路径的规则，某一类请求路径，就去特定的文件夹下，读取指定的文件，返回流给前端
+	  特定的文件夹是配置的，指定的文件是请求路径解析出来的，某一类请求路径是配置的
+12 controller
+	1 关于controller 类的控制跳转
+	2 @Controller 是控制跳转，返回类型String,返回值是路径，返回的就是一个页面，
+		如果返回值得路径是错的，会报不存在无法解析的错
+		如果想要返回的是具体的值不是页面，就要在方法上加上一个注解@ResponseBody将java对象转化成指定的格式，
+		一般是json，根据请求头的accept决定
+	3 @RestController rest的路径映射，控制请求多的入口，返回类型String,返回的值是路径，返回的还是路径的字符串
+13 basePackageClasses属性会去扫描类所在包下的所有组件，而不是指定某个组件！
+@ServletComponentScan(basePackageClasses = {NoticeRetransmissionServlet.class})  
+
+13 servlet
+	1 继承 httpServlet 类
+	2 重写 doGet doPost 方法
+	3 配置servlet的上下文web.xml,或者加上@WebServlet注解
+	4 在springboot中需要开启@ServletComponentScan 注解，不然servlet无法注入到IOC容器里
+	
+hashmap
+红黑树
+14 逻辑嵌入
+	1 把你的逻辑嵌入到程序的线程运行过程中去
+	2 如何知道怎么嵌入，是通过哪个类，哪个方法
+	3 需要去了解它原本逻辑是如何执行的，才能知道，如何嵌入你的逻辑，也就是要看源码
+	4 接口的扩展，不就是用来嵌入，扩展自己的逻辑吗
+	5 框架文档，只是告诉你，它是什么，用什么用，哪些功能，至于使用它，甚至于扩展它，就需要你了解它的具体逻辑
+	6 程序的入口，和程序逻辑的触发点
+	7 如何看源码，如何看它的逻辑
+	8 不是我不知道如何写 自己的逻辑，而是我不知道如何让这段逻辑生效，如何实现我的逻辑，有时候是这样
+15 枚举
+	1 使用枚举可以让使用者知道具体有哪几种类型
+	2 enum 文件夹有问题，无法创建java class文件，enums文件夹就没有问题，好奇怪的问题，无法理解
+16 restful 语法
+	1 请求传值的格式要求
+	2 请求接受的语法要求
+	3 @PathVariable ：映射语法 @RequestMapping(value = "/api/{name}")，请求路径 localhost:8080/test/api/zhangsan
+	4 @RequestParam ：@RequestParam  String pwd,请求路径 localhost:8080/test/api/zhangsan?pwd=123
+	5 @RequestBody 	：@RequestBody PersonDTO personDTO，请求路径 raw 的json格式 {"personName":"lisi"}
+17 注解
+	1 标识 2 嵌入业务逻辑
+	2 关键是如何使用这个注解，这个注解的解析在哪里被执行，被调用
+	3 目前已知的一种是拦截器
+18 aop
+	1 面向切面的编程思想，和oop面向对象互补
+	2 日志，权限，事物，性能统计
+	3 底层入口还是拦截器一类的东西，并不是这样，切点可以定义自己写的任意一个方法上，可以是一个注解标记
+19 入口
+	1 入口相对于逻辑而言
+	2 一段程序逻辑，是一条线，会有很多段不同的逻辑，嵌入到这个线中，如何嵌入，就是要有一个入口
+	3 目前已知常用的入口，拦截器，过滤器，因为对于web程序而言，servlet技术就是最开始的地方，想要嵌入一段逻辑到框架里去
+	  又不了解底层的代码逻辑，最简单粗暴的方法就是直接找入口
+20 集成Redis
+	1 下载 安装
+	2 启动Redis服务
+	3 项目引入Redis依赖
+		<dependency>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-starter-data-redis</artifactId>
+        </dependency>
+	4 使用操作模板类 StringRedisTemplate
+	5 内存数据库，并发很强，支持5种数据结构
+21 CPU 缓存 内存 硬盘
+	共同点：两者都用于暂时储存数据，没有电压时数据都会丢失。
+	不同点：内存一般加工成内存条，后期安装到主板上，可插拔；缓存一般焊接在主板上，或者集成在CPU中。这是表面的差别。
+	实质上的差别：内存存储单元为动态存储结构，缓存为静态存结构。前者结构简单，但数据写入后会因电荷泄漏很快丢失，
+	因此CPU必须不停地在数据完全失去之前将数据再一次写入，周而复始；而静态的正好相反，结构复杂，但一次写入后，除非改写，
+	数据不会丢失。省略了反复写入的过程，得到的结果就是写入、读出的速度大大加快，所以，缓存是个值得关注的东东。
+	1 CPU存取速度非常快，一秒钟能存取，处理10一条指令和数据（主频1G）
+	2 内存慢很多
+	3 缓存：为了解决CPU和内存处理速度的差距，CPU不用等内存
+	4 内存中常用的指令会被复制到缓存中，这样CPU就不用去内存中读取数据了，对于CPU来说太慢了，本来CPU一秒可以做1亿件事
+	  因为从内存读取数据太慢，一秒只能做1千万件事，但是从缓存中读取1秒钟可以做5千万件事
+	5 RAM 是指断电会消失的存取器，ROM是断电不会消失的存取器
+	6 RAM分为静态和动态，ROM分为动态和机械
+	7 静态RAM（缓存） > 动态RAM（内存） > 动态ROM（固态硬盘） > 机械ROM（机械硬盘）
+	8 静态RAM存数据的体积是动态RAM的6倍
+	9 CPU读取数据的顺序：一级缓存（静态RAM） > 二级缓存(动态RAM做成的缓存) > 内存 > 外存
+	10 缓存是CPU三大组件之一的存取器，：还有控制单元，逻辑单元，存取单元（缓存）
+	11 系统运行速度：也看CPU查找命中率：缓存越大，存储的指令数据越多，CPU查找命中的几率就越高，系统的运行速度就越快？
+22 数据结构
+	1 索引（目录）
+23 缓存
+	1 提高用户体验
+	2 缓解数据库压力，避免数据库挂掉
+	3 提高性能，支持高并发
+	4 读写速度快
+	5 用不到缓存，只是并发低了
+24 多线程
+	1 一般多线程的使用都设计数据库，否则只是高并发的请求，系统还是能够支持的
+25 springboot 使用不可以注入的类
+	1 通过反射，直接拿到类信息
+	2 拦截器在编写时，是否可以自动注入IOC容器里对象？可以的吧，不确定，可以 直接引用，但是要注册拦截器对象到IOC容器里
+26 拦截器
+	1 本质上是一种实现了aop思想的技术，是基于servlet,在请求层面切一面
+27 泛型和object
+	在Java SE 1.5之前，没有泛型的情况的下，通过对类型Object的引用来实现参数的“任意化”，
+	“任意化”带来的缺点是要做显式的强制类型转换，而这种转换是要求开发者对实际参数类型可以预知的情况下进行的。
+	对于强制类型转换错误的情况，编译器可能不提示错误，在运行的时候才出现异常，这是一个安全隐患。
+	泛型的好处是在编译的时候检查类型安全，并且所有的强制转换都是自动和隐式的，提高代码的重用率。
+	泛型：可以规定和规范，使用时的类型,创建对象的时候限制类型，使用过的时候就不需要转化类型
+	object：创建对象的时候不限制类型，但是取值使用的时候，要转化类型
+28 线程
+	1 线程的创建方式一共三种，1.继承Thread类 2.实现Runnable接口 3，实现Callable接口
+	2 继承 Thread: public class MyThread extends Thread：重写run方法：线程需要处理的业务逻辑，new MyThread().start();启动Redis服务
+	3 实现Callable接口：
+	4 	启动线程方式一
+		//6.创建一个线程对象：
+		RanDomCallable rdc=new RanDomCallable();
+		//7.启动线程，直接用Thread传rdc不行，必须再借助一个FutureTask
+		FutureTask<Integer> ft=new FutureTask<Integer>(rdc);
+		Thread t=new Thread(ft);//FutureTask实现了Runnable接口所以可以传入
+		t.start();
+		启动线程方式二：线程池
+		1 ExecutorService es = Executors.newFixedThreadPool(3);//创建线程池：核心线程数3个
+			es.submit(new MyThread());
+		2   
+			@Bean：需要注册线程池对象到IOC容器中，并指定线程数量，才可以依赖注入
+			public ExecutorService executorService() {
+				return Executors.newFixedThreadPool(threadPoolSize);
+			}
+			
+			@Autowired:依赖注入线程池
+			private ExecutorService executorService;
+			executorService.submit(new MyThread());
+29 shiro
+	1 shiro 抛出异常的地方，比异常全局处理的逻辑，还要外面，所以全局异常处理捕捉不到
+30 查看源码
+	1 调用处 > 点进去 > 方法的被调用处：如果对象本身是接口，接口对象内包装了具体实现类，
+		那么点进去是接口的申明处，而不是具体实现接口的具体类中的具体方法实现，因为不是以具体实现类的对象点进去的
+	2 如何查看这个接口被哪个具体类实现了，并且使用了实现方法
+	3 继续点进去 > 还是一个接口：
+	4 点方法名:向上回溯，查询当前方法被哪些地方调用了
+	5 对象.方法名：向下查询，查看方法的具体实现或申明处
+31 方法重载
+	1 Java方法的重载：返回类型、修饰符可以相同，也可不同。
+	  要求同名的方法必须有不同的参数表，仅有返回类型不同是不足以区分两个重载的方法。
+32 idea缓存
+	1 移动文件夹时，有时候会出现类找不到，重启idea都不可以
+	2 移动回去就又好了，然后再移动又能找到了
+	3 即使报错，但是不影响项目启动
+33 匿名内部类
+	1 方法括号内(),直接创建一个接口实现的对象，new interface(){};默认这个对象直接是实现这个接口的
+	2 方法直接接受接口具体实现类对象，不需要IOC容器注入，也不需要关联引用，也不需要再创建
+	3 具体实现类里不需要重新注入对象，当前所在类有的对象都可以使用
+	 1、使用匿名内部类时，我们必须是继承一个类或者实现一个接口，但是两者不可兼得，同时也只能继承一个类或者实现一个接口。
+     2、匿名内部类中是不能定义构造函数的。
+     3、匿名内部类中不能存在任何的静态成员变量和静态方法。
+     4、匿名内部类为局部内部类，所以局部内部类的所有限制同样对匿名内部类生效。
+     5、匿名内部类不能是抽象的，它必须要实现继承的类或者实现的接口的所有抽象方法。
+	4我们给匿名内部类传递参数的时候，若该形参在内部类中需要被使用，那么该形参必须要为final。也就是说：
+		当所在的方法的形参需要被内部类里面使用时，该形参必须为final。
+		 简单理解就是，拷贝引用，为了避免引用值发生改变，例如被外部类的方法修改等，而导致内部类得到的值不一致，
+		 于是用final来让该引用不可改变。
+      故如果定义了一个匿名内部类，并且希望它使用一个其外部定义的参数，那么编译器会要求该参数引用是final的。
+34 可变形参
+	1 一个方法中只能定义一个可变长度形参 String... value
+	2 编译器等同于 String[] value
+	3 getString("asd","adsfa","fasdf","adfadf"); getString(String... value)
+	4 无法接收数组
+	5 方法重载无法确定
+	6 泛型无法确定
+35 快捷键
+	1 ctrl+ d ,复制当前行，粘贴到下一行
+36 Redis 键空间通知
+	1 redis.conf 配置文件开启键空间通知
+	2 配置内容：notify-keyspace-events Ex
+	3 启用配置：Redis启动没有指定配置文件使用的是默认的配置文件 1 指定配置文件启动 2 修改默认的配置文件配置
+	4 	cmd: setex name 10 7yue 插入一个key，
+		代码：stringRedisTemplate.opsForValue().set("redisExpiresKey","1",10,TimeUnit.SECONDS);
+	5 代码：配置监听
+37 过滤器 和 拦截器
+	1 它依赖于servlet容器。在实现上，基于函数回调，它可以对几乎所有请求进行过滤，
+		但是缺点是一个过滤器实例只能在容器初始化时调用一次。
+	2 它依赖于web框架，在SpringMVC中就是依赖于SpringMVC框架。在实现上,基于Java的反射机制，属于面向切面编程（AOP）的一种运用。
+	由于拦截器是基于web框架的调用，因此可以使用Spring的依赖注入（DI）进行一些业务操作，
+	同时一个拦截器实例在一个controller生命周期之内可以多次调用。
+	但是缺点是只能对controller请求进行拦截，对其他的一些比如直接访问静态资源的请求则没办法进行拦截处理。
+	从灵活性上说拦截器功能更强大些，Filter能做的事情，都能做，而且可以在请求前，请求后执行，比较灵活。
+	Filter主要是针对URL地址做一个编码的事情、过滤掉没用的参数、安全校验（比较泛的，比如登录不登录之类），
+	太细的话，还是建议用interceptor。	
+	3 fiter init >  intercepter preHandel > intercepter postHander> fiter after
+38 Optional
+	1 强制判断空值
+39 Serializable
+a，什么叫序列化和反序列化
+b，作用。为啥要实现这个 Serializable 接口，也就是为啥要序列化
+c，serialVersionUID 这个的值到底是在怎么设置的，有什么用。有的是1L，有的是一长串数字，迷惑ing。
+
+1,序列化和反序列化的概念
+序列化：把对象转换为字节序列的过程称为对象的序列化。
+反序列化：把字节序列恢复为对象的过程称为对象的反序列化。
+上面是专业的解释，现在来点通俗的解释。在代码运行的时候，我们可以看到很多的对象(debug过的都造吧)，
+可以是一个，也可以是一类对象的集合，很多的对象数据，这些数据中，
+有些信息我们想让他持久的保存起来，那么这个就叫序列化。
+就是把内存里面的这些对象给变成一连串的字节(bytes)描述的过程。
+常见的就是变成文件
+我不序列化也可以保存文件啥的呀，有什么影响呢？我也是这么问的。
+2,什么情况下需要序列化
+当你想把的内存中的对象状态保存到一个文件中或者数据库中时候；
+当你想用套接字在网络上传送对象的时候；
+当你想通过RMI传输对象的时候；
+(老实说，上面的几种，我可能就用过个存数据库的。)
+3 序列化时为了按照，约定格式，存储，传输，这样反序列化时，也按照这种约定的格式就可以还原，原本的数据，
+	不存在传输，系统，数据库，解析差异的时候，可以不序列化，但是一旦出现差异，就无法反序列化，解析还原数据了，所以为了
+	稳妥，序列化，你不能保证数据库不换，服务器不换，系统不换吧，一旦换了，项目不就炸了，数据全部无法还原了，数据无法传输了
+4 serialVersionUID：版本ID，相当于密码加密salt,生产token的key，主要是为了兼容，保证版本一致，避免JVM生成默认的ID因为
+	文件名变化而变化导致，版本不兼容，也就无法反序列化以前的数据了
+40 @Transactional
+	1 编程式事物：代码入侵性强，在代码中手动提交，回滚操作
+	2 声明式事物：基于aop,业务与事物部分解耦：两种方式：1 基于TX和aop的XML 2 @Transactional注解
+	3 数据库操作必然都有事务，加在dao上的事务没有意义，项目的事务管理，是为了管理业务，并不是数据，也就是项目的事务管理
+		是从业务的角度上去看的，业务层面上没有事务，只是业务层面不做事务管理，数据库最后操作自己还会加的（猜测）
+	3 @Transactional应用域：接口，类，方法
+		a:作用类：表示该类所有的public方法都配置了相同事物属性信息
+		b:作用方法：当类配置了@Transactional，方法也配置了@Transactional,方法会覆盖类上的，方法只使用自己的配置
+		c:作用接口：不推荐这种使用方法，因为一旦标注在Interface上并且配置了Spring AOP 使用CGLib动态代理，
+		将会导致@Transactional注解失效
+	4 属性
+		propagation属性
+		propagation 代表事务的传播行为，默认值为 Propagation.REQUIRED，其他的属性信息如下：
+		Propagation.REQUIRED：如果当前存在事务，则加入该事务，如果当前不存在事务，则创建一个新的事务。
+		( 也就是说如果A方法和B方法都添加了注解，在默认传播模式下，A方法内部调用B方法，会把两个方法的事务合并为一个事务 ）
+		Propagation.SUPPORTS：如果当前存在事务，则加入该事务；如果当前不存在事务，则以非事务的方式继续运行。
+		Propagation.MANDATORY：如果当前存在事务，则加入该事务；如果当前不存在事务，则抛出异常。
+		Propagation.REQUIRES_NEW：重新创建一个新的事务，如果当前存在事务，暂停当前的事务。( 当类A中的 a 
+		方法用默认Propagation.REQUIRED模式，类B中的 b方法加上采用 Propagation.REQUIRES_NEW模式，
+		然后在 a 方法中调用 b方法操作数据库，然而 a方法抛出异常后，b方法并没有进行回滚，因为Propagation.REQUIRES_NEW会暂停 a方法的事务 )
+		Propagation.NOT_SUPPORTED：以非事务的方式运行，如果当前存在事务，暂停当前的事务。
+		Propagation.NEVER：以非事务的方式运行，如果当前存在事务，则抛出异常。
+		Propagation.NESTED ：和 Propagation.REQUIRED 效果一样。
+		isolation 属性
+		isolation ：事务的隔离级别，默认值为 Isolation.DEFAULT。
+		Isolation.DEFAULT：使用底层数据库默认的隔离级别。
+		Isolation.READ_UNCOMMITTED
+		Isolation.READ_COMMITTED
+		Isolation.REPEATABLE_READ
+		Isolation.SERIALIZABLE
+		timeout 属性
+		timeout ：事务的超时时间，默认值为 -1。如果超过该时间限制但事务还没有完成，则自动回滚事务。
+		readOnly 属性
+		readOnly ：指定事务是否为只读事务，默认值为 false；为了忽略那些不需要事务的方法，比如读取数据，可以设置 read-only 为 true。
+		rollbackFor 属性
+		rollbackFor ：用于指定能够触发事务回滚的异常类型，可以指定多个异常类型。
+		noRollbackFor属性**
+		noRollbackFor：抛出指定的异常类型，不回滚事务，也可以指定多个异常类型。
+	5 失效场景
+		1 应用在非public方法上
+		2 属性propagation配置错误：
+			TransactionDefinition.PROPAGATION_SUPPORTS：如果当前存在事务，则加入该事务；如果当前没有事务，则以非事务的方式继续运行。
+			TransactionDefinition.PROPAGATION_NOT_SUPPORTED：以非事务方式运行，如果当前存在事务，则把当前事务挂起。
+			TransactionDefinition.PROPAGATION_NEVER：以非事务方式运行，如果当前存在事务，则抛出异常。
+		3 rollbackFor 设置错误
+			1 可以指定能够触发事物回滚的异常类型
+			2 spring默认抛出了unchecked(继承RuntimeException)或error 才回滚事物
+			3 自定义异常的子类异常抛出同样会触发回滚
+		4 同一个类中方法调用，导致事物失效：aop好像也会失效
+				开发中避免不了会对同一个类里面的方法调用，比如有一个类Test，它的一个方法A，A再调用本类的方法B
+				（不论方法B是用public还是private修饰），但方法A没有声明注解事务，而B方法有。则外部调用方法A之后，
+				方法B的事务是不会起作用的。这也是经常犯错误的一个地方。
+
+				那为啥会出现这种情况？其实这还是由于使用Spring AOP代理造成的，因为只有当事务方法被当前类以外的代码调用时，
+				才会由Spring生成的代理对象来管理。
+				
+				aop代理对象生成：只有aop被当前类以外代码调用才会生成
+		5 异常被catch吃掉了
+			1 UnexpectedRollbackException：事物A应该提交，事物B应该回滚，前后不一致，抛出回滚异常
+		6 数据库引擎不支持事物
+			1 常用的MySQL数据库默认使用支持事务的innodb引擎。一旦数据库引擎切换成不支持事务的myisam，那事务就从根本上失效了。
+	6 事物4大特性
+		1 原子性：一次事物，是一个动作
+			1 原子性只保证了一个事物内的所有操作同一性，大家同生死，不会出现你死了，我还活着。
+			但是，原子性并没有保证大家同一时刻一起生，一起死
+		2 一致性：一次事物里的几件事，要么一起提交，要么一起回滚：基于原子性，原子性保证了事物的一致性？
+			理解错了,这就是原子性，而不是一致性，原子性，决定以了一个事物原子包里所有的动作，同生同死
+			是从事物动作的角度去看
+			1:一致性：是从数据的状态角度去看
+			2 一致性 是基于事物的隔离性，只有事物隔离，事物才不会取到混乱的数据，保证所有事物使用的数据是一致的？错误
+			3 一致性 虽然是从数据的角度去看，但不是基于隔离性，因为只是保证当前事物所有数据的一致性
+			一个事物保持了1
+		3 隔离性：事物与事物互不干扰，我在占着茅坑，别人就进不来
+			1 隔离级别：从事物的角度看，一定是大于1个事物
+				1 读未提交 read uncommited：A事物未提交，B读取了A事物提交后的结果：隔离级别最差，不可避免脏读，不可重复读，幻读
+				2 读提交  read commmited：A事物提交，B事物才能读取结果：可以避免脏读，不可以重复度，不能避免幻读
+				3 可重复读 repeatable read -innodb(默认级别)：A 事物可以多次读，B事物在修改数据，A读到的都是B事物修改前的数据
+					只有当A事物结束，再次查询才能看到B事物提交的结果 可以避免脏读，不可重复读，不可避免幻读
+				  幻读影响最小，大不了再修改一次
+				4 序列化 ：	事物顺序进行，可以避免脏读，不可重复读，幻读，但是效率低，A 事物执行，其它事物必须等待
+			2 隔离级别问题：
+				1 脏读：现象：读到脏数据，不对的数据，原因：因为数据被改动了，回滚
+				2 不可重复度：现象：第一次读是A，第二次读就变成了B，原因：数据被改动了，回滚
+				3 幻读：现象：A修改所有数据，B 提交数据，A 修改完查询还有数据没有被修改，原因：数据被改动了，事物提交
+			3 传播特性：多个事物方法互相调用时，事物如何在这些方法间传播
+				1 REQUIRED(spring默认特性)：如果当前没有事务，则自己新建一个事务，如果当前存在事务，则加入这个事务	
+					A,B没有事物则新增，A，B存在事物则合并，合并成C?
+				2 SUPPORTS: A,B(SUPPORTS): 当前存在事务，则加入当前事务，如果当前没有事务，就以非事务方法执行
+					A有事物，B就用A的，A没有事物，B也不要事物，无条件支持A，谁调用B，B就跟随
+				3 MANDATORY：A,B(MANDATORY):当前存在事务，则加入当前事务，如果当前事务不存在，则抛出异常。
+					A有事物，B就用A的，A没有事物，B就抛出异常，有条件支持A，谁调用B，就得给B饭吃
+				4 REQUIRES_NEW：创建一个新事务，如果存在当前事务，则挂起该事务
+					B不管A有没有事物，都新建一个事物B，并且B只用自己B事务，A，B两事务互相隔离，互不相关
+				5 NOT_SUPPORTED：始终以非事务方式执行,如果当前存在事务，则挂起当前事务
+					A 有事务，B 不要，任何人都管不了B，B不和任何人有关系，只做自己的事，不受外界影响
+				6 NEVER：不使用事务，如果当前事务存在，则抛出异常
+					A 有事务，B 拒绝A的调用，我不用，你也不准用，你要用，我就不给你用，霸道总裁
+				7 NESTED：如果当前事务存在，则在嵌套事务中执行，否则REQUIRED的操作一样（开启一个事务）
+					A 有事务，B 新建一个事务B，嵌套在A事务里，A没有事务，B 新建一个事务
+					1 A 是老大，老大出事，B小弟都要倒霉，
+					2 A 是老大，老大做幕后，B 小弟出事被抓，直接被抛弃，影响不了A老大
+					3 A 老大做自己的事，把B小弟派出去单干，A,B不再有从属关系
+						B小弟出事，影响不了找不到A老大，A 老大出事，B小弟直接跑路，A也影响不了B
+				
+		4 持久性：基于日志：日志保证了事物的持久性，保存到数据库，从数据的存储角度去看
+	7 事物使用场景：大于一次数据库操作：必须
+		1 一个动作修改两张表以上的数据
+		2 一个动作有两次以上保存数据的动作
+		3 只要一个动作，大于一次数据库操作，就要考虑到事务
+		4 必须用事务，不然数据不一致，就等着炸吧
+	8 乐观锁和悲观锁
+		1 乐观锁(不做管控处理，标记预警)：相对于悲观锁而言，认为不会对数据库数据一致性有影响
+			在关系数据库管理系统里，乐观并发控制（又名”乐观锁”，Optimistic Concurrency Control，缩写”OCC”）
+			是一种并发控制的方法。它假设多用户并发的事务在处理时不会彼此互相影响，各事务能够在不产生锁的情况下处理各自影响的 
+			那部分数据。在提交数据更新之前，每个事务会先检查在该事务读取数据后，有没有其他事务又修改了该数据。
+			如果其他事务有更新的话，正在提交的事务会进行回 滚。乐观事务控制最早是由孔祥重（H.T.Kung）教授提出
+
+			乐观锁不是数据库自带的，需要我们自己去实现。乐观锁是指操作数据库时(更新操作)，想法很乐观，认为这次的操作不会导致冲突
+			，在操作数据时，并不进行任何其他的特殊处理（也就是不加锁），而在进行更新后，再去判断是否有冲突了。
+			
+			1. 读取：事务将数据读入缓存，这时系统会给事务分派一个时间戳。 
+			2. 校验：事务执行完毕后，进行提交。这时同步校验所有事务，如果事务所读取的数据在读取之后又被其他事务修改，则产生冲突，事务被中断回滚。 
+			3. 写入：通过校验阶段后，将更新的数据写入数据库。
+
+			乐观并发控制多数用于数据争用不大、冲突较少的环境中，这种环境中，偶尔回滚事务的成本会低于读取数据时锁定数据的成本，
+			因此可以获得比其他并发控制方法更高的吞吐量。
+			实现：1 数据库版本version 2 时间戳 更新时间 ，更新是判断version或时间戳是否一致来保证数据一致性
+			现象：如果发现数据不一致，则处理，也就是允许数据不一致，乐观的认为不会出现，即使出现就处理
+			特定：并发高，不会发生死锁	，满足并发量，又不会产生锁，又可以回滚事务，保证数据一致性
+			优点与不足
+　　		乐观并发控制相信事务之间的数据竞争(data race)的概率是比较小的，因此尽可能直接做下去，直到提交的时候才去锁定，
+			所以不会产生任何锁和死锁。但如果直接简单这么做，还是有可能会遇到不可预 期的结果，例如两个事务都读取了数据库的某一行，
+			经过修改以后写回数据库，这时就遇到了问题。
+		2 悲观锁(严格控制，必须处理)：认为一定会对数据库数据一致性有影响，必须严格控制，不能有一点意外，处理
+			悲观锁是由数据库自己实现了的，要用的时候，我们直接调用数据库的相关语句就可以了。
+			具有强烈的独占和排他特性
+			在关系数据库管理系统里，悲观并发控制（又名”悲观锁”，Pessimistic Concurrency Control，缩写”PCC”）
+			是一种并发控制的方法。它可以阻止一个事务以影响其他用户的方式来修改数据。如果一个事务执行的操作读某行数据应用了 锁，
+			那只有当这个事务把锁释放，其他事务才能够执行与该锁冲突的操作。
+	
+			悲观并发控制主要用于数据争用激烈的环境，以及发生并发冲突时使用锁保护数据的成本要低于回滚事务的成本的环境中。
+			1 它指的是对数据被外界（包括本系统当前的其他事务，以及来自外部系统的事务处理）修改持保守态度，
+			因此，在整个数据处理过程中，将数据处于锁定状态。悲观锁的实现，往往依靠数据库提供的锁机制
+			（也只有数据库层提供的锁机制才能真正保证数据访问的排他性，否则，即使在本系统中实现了加锁机制，
+			也无法保证外部系统不会修改数据
+			实现：SELECT 的读取锁的两种方式:
+				1. SELECT ... LOCK IN SHARE MODE
+				2. SELECT ... FOR UPDATE 
+			两种方式在事务(Transaction) 进行当中SELECT 到同一个数据表时，都必须等待其它事务数据被提交(Commit)后才会执行。
+			而主要的不同在于LOCK IN SHARE MODE 在有一方事务要Update 同一个表单时很容易造成死锁 。
+			简单的说，如果SELECT 后面若要UPDATE 同一个表单，最好使用SELECT ... UPDATE。
+			
+			MySQL SELECT ... FOR UPDATE 的Row Lock(行锁)与Table Lock(表锁).
+			由于InnoDB 预设是Row-Level Lock，所以只有「明确」的指定主键，MySQL 才会执行Row lock (只锁住被选取的数据) ，否则MySQL 将会执行Table Lock (将整个数据表单给锁住).
+			1.明确指定主键，并且有此数据，row lock
+			2.明确指定主键，若查无此数据，无lock
+			3.无主键 /主键不明确，table lock
+			除了主键外，使用索引也会影响数据库的锁定级别
+			1.明确指定索引，并且有此数据，row lock
+			2.明确指定索引，若查无此数据，无lock
+
+			总是假设最坏的情况，每次去拿数据的时候都认为别人会修改，所以每次在拿数据的时候都会上锁，
+			这样别人想拿这个数据就会阻塞直到它拿到锁（共享资源每次只给一个线程使用，其它线程阻塞，用完后再把资源转让给其它线程）。
+			传统的关系型数据库里边就用到了很多这种锁机制，比如行锁，表锁等，读锁，写锁等，都是在做操作之前先上锁
+		
+			Java中synchronized和ReentrantLock等独占锁就是悲观锁思想的实现。
+			刚刚说了，对于悲观锁，一般数据库已经实现了，共享锁也属于悲观锁的一种，那么共享锁在mysql中是通过什么命令来调用呢。
+			通过查询资料，了解到通过在执行语句后面加上lock in share mode就代表对某些资源加上共享锁了。
+			加上共享锁后，也提示错误信息了，通过查询资料才知道，对于update,insert,delete语句会自动加排它锁的原因
+			排它锁
+			排它锁与共享锁相对应，就是指对于多个不同的事务，对同一个资源只能有一把锁。
+			与共享锁类型，在需要执行的语句后面加上for update就可以了
+ 
+
+			行锁
+			行锁，由字面意思理解，就是给某一行加上锁，也就是一条记录加上锁。
+
+			比如之前演示的共享锁语句
+
+			SELECT * from city where id = "1"  lock in share mode; 
+
+			由于对于city表中,id字段为主键，就也相当于索引。执行加锁时，会将id这个索引为1的记录加上锁，那么这个锁就是行锁。
+
+ 
+
+			表锁
+			表锁，和行锁相对应，给这个表加上锁
+
+			特点：并发小，依靠数据实现
+
+			应用：乐观锁多用于读，悲观锁多用于写
+41 mybatis
+	1 TypeAlias : 类型别名，给一个很长的对象类型路径映射，起一个简短的名字，每次用到就不用写那么长了
+	2 ResultMap : 结果映射，对象名一般和数据库名不会完全一致，查询时候可以通过起别名使他们一致，以保证可以成功映射到结果集
+				  但是一个对象结果集可能会使用很多次，每次查询都起别名的工作就重复了，这里定义一次之后就不需要再起别名，直接
+				  用这个结果集映射关系就可以了
+	3 动态SQL：if，choose，trim,foreach
+42 sql
+	1 子查询：效率极低，数据库会炸的：嵌套查询 > where 里 嵌套 where查询
+		1 会多次遍历数据库:相当于java里的for循环里嵌套for循环，层数一多，就宕机
+		2 创建临时表
+		子查询不一定需要两个表有关联字段，而连接查询必须有字段关联（所谓的主外键关系）
+
+		表关联的效率要高于子查询，因为子查询走的是笛卡尔积
+		表关联可能有多条记录，子查询只有一条记录，如果需要唯一的列，最好走子查询
+		对于数据量多的肯定是用连接查询快些，原因：因为子查询会多次遍历所有的数据（视你的子查询的层次而定），
+		而连接查询只会遍历一次。
+
+		但是数据量少的话也就无所谓是连接查询还是子查询，视自己的习惯而定。一般情况下还是用子查询来的好，容易控制
+	2 关联查询：
+43 pageHelper
+	1 分页插件的版本有问题项目无法启动
+        <dependency>
+            <groupId>com.github.pagehelper</groupId>
+            <artifactId>pagehelper-spring-boot-starter</artifactId>
+            <version>1.2.13</version>
+        </dependency>
+	2 配置
+		pagehelper:
+			helperDialect: mysql
+			reasonable: false
+			params: count=countSql
+			supportMethodsArguments: true
+	3 
+        //分页插件开启
+        //PageHelper.startPage(1,2);
+        //紧跟着的下一个list查询生效，下面还有list查询分页不再生效
+		List<MPermissionEntity> varList = permissionMapper.findPagePermission();
+		返回的是一个pageinfo对象
+		return new PageInfo<MPermissionEntity>(varList);
+	4 特点
+		1 mapper.xml 里的sql语句不需要写分页SQL
+		2 调用的方法参数不需要传入，接受分页对象
+		3 每次开启分页对象，只有下一行list查询生效，还有需要分页需要重新定义创建分页对象
+44 索引：
+	索引分单列索引和组合索引。单列索引，即一个索引只包含单个列，一个表可以有多个单列索引，但这不是组合索引。	
+	组合索引，即一个索引包含多个列。创建索引时，你需要确保该索引是应用在 SQL 查询语句的条件(一般作为 WHERE 子句的条件)。
+	实际上，索引也是一张表，该表保存了主键与索引字段，并指向实体表的记录。上面都在说使用索引的好处，但过多的使用索引将会造成滥用。
+	因此索引也会有它的缺点：虽然索引大大提高了查询速度，同时却会降低更新表的速度，如对表进行INSERT、UPDATE和DELETE。
+	因为更新表时，MySQL不仅要保存数据，还要保存一下索引文件。建立索引会占用磁盘空间的索引文件。
+	1 种类
+		a 普通索引:加速查询
+		b 唯一索引:加速查询+ 列值唯一（可以为null）
+        c 主键索引:加速查询+ 列值唯一(不可以为null)+表中只有一个组合索引：多列值组成一个索引，专门用于组合搜索，其效率大于索引合并
+		d 全文索引：对文本的内容进行分词，进行搜索
+		ps.
+		索引合并，使用多个单列索引组合搜索
+		覆盖索引，select的数据列只用从索引中就能够取得，不必读取数据行，换句话说查询列要被所建的索引覆盖
+	2 类型
+		1 Mysql目前主要有以下几种索引类型：FULLTEXT，HASH，BTREE，RTREE。
+		a FULLTEXT: FULLTEXT即为全文索引，目前只有MyISAM引擎支持。其可以在CREATE TABLE ，ALTER TABLE ，CREATE INDEX 使用，
+			不过目前只有 CHAR、VARCHAR ，TEXT 列上可以创建全文索引。
+			它的出现是为了解决WHERE name LIKE “%word%"这类针对文本的模糊查询效率较低的问题。
+		b HASH :由于HASH的唯一（几乎100%的唯一）及类似键值对的形式，很适合作为索引。
+
+				HASH索引可以一次定位，不需要像树形索引那样逐层查找,因此具有极高的效率。
+				但是，这种高效是有条件的，即只在“=”和“in”条件下高效，对于范围查询、排序及组合索引仍然效率不高。
+		c BTREE: BTREE索引就是一种将索引值按一定的算法，存入一个树形的数据结构中（二叉树），
+				每次查询都是从树的入口root开始，依次遍历node，获取leaf。这是MySQL里默认和最常用的索引类型。
+		d RTREE:RTREE在MySQL很少使用，仅支持geometry数据类型，支持该类型的存储引擎只有MyISAM、BDb、InnoDb、NDb、Archive几种。
+			相对于BTREE，RTREE的优势在于范围查找。ps. 此段详细内容见此片博文：Mysql几种索引类型的区别及适用情况
+45 vue
+	1 搭建项目环境
+		a:安装node.js:安装vue-cli需要npm包管理工具，npm是基于node.js开发的一个应用
+			npm 是随同 Node.js 一起安装的包管理工具，npm管理对应 Node.js 的第三方插件
+			cnpm:因为npm安装插件是从国外服务器下载，受网络影响大，可能出现异常：
+			淘宝团队干了这事。来自官网：“这是一个完整 npmjs.org 镜像
+			npm install cnpm -g --registry=https://registry.npm.taobao.org
+			
+		b:1 直接引入vue.js
+		  2 用cli 脚手架搭建项目：vue-cli(1-2版本包名) @vue/cli(3-4版本包名)
+		全局安装webpack和脚手架:vue-lic 的命令是全局的，安装好在哪里都可以使用，应该是自动配置环境变量了吧，没看到啊
+		1.npm install webpack -g
+		2.npm install -g vue-cli
+		3 npm install -g @vue/cli
+	    c 创建项目：vue init webpack projectName (vue cli 2)
+					vue create projectName (vue cli 3)
+	2 运行一个项目
+		1 从git上下载
+		2 进入到目录下：npm install 下载项目依赖
+		3 运行项目：npm run serve
+		4 idea : terminal 中相当于cmd，可以运行命令
+		5 node-sass:安装失败，被墙了，用cnpm install 淘宝镜像安装
+46 hibernate设置自动生成表
+	1 首先必须保证有POJO类，并且存在annotation注解 @Entity
+	设置hibernate.hbm2ddl.auto（例如none（默认值）， ，create-only，drop，create，create-drop，validate和update）
+	spring.jpa.hibernate.ddl-auto = update
+47 git 远程连接
+
+	1 ssh -p 22 root@ip
+	2 git clone : 克隆，下载
+	3 git status: 查看当前分支
+	4 git checkout -b branchName:新增分支
+	5 git checkout branchName: 切换分支
+
+
+	9 git branch -d branchName: 删除分支
+	10 git branch -a :查看所有分支
+48 git 使用
+	1 先checkout 分支，拉取分支最新的代码pull，fetch > 如果不是最新的就会有冲突，就要merge
+		checkout,pull,fetch,都可以拉取代码
+		fetch相当于是从远程获取最新版本到本地，不会自动merge 
+		git pull ：相当于是从远程获取最新版本并merge到本地 
+		pull只是单纯地把远程服务器最新的改动更新到本地，假如本地删除了文件或者修改了文件，则此操作不会更新本地的文件。
+		checkout:本地删除了文件或者修改了文件，如果需要回复，则直接从本地把文件checkout出来就可以了，用不着从远程服务器上pull下来,因为，所有的历史版本你的本地都有的
+	git commit -m "Initial commit" --author="mn <mn@furzoom.com>"
+	git config --global user.email "270470035@qq.com"
+	git config --global user.name "吴侠"
+	配置git项目：
+	1 在github 上注册一个账户，创建一个仓库，作为远程仓库
+	2 本地创建一个文件：mkdir demo,作为本地项目
+	3 git init:在demo项目下，初始化git应用程序，这样这个文件夹就可以被git管理到  （本地git管理，创建本地git仓库）
+	4 git remote add origin git仓库地址：将本地git仓库和github上的仓库关联起来，或者是配置github仓库地址，
+		并且可以起一个别名叫origin，以后推送到 远程仓库是可以直接根据别名推送
+	提交更新：
+	1 创建一个或多个文件：项目文件 echo "#Demo" >> README.md
+	2 git add new fileName:添加文件到git,这样这个文件将会被git管理，跟踪变化(本地git管理)
+		git add * :添加所有
+	3 git commit -m "提交内容描述":提交文件，创建一次提交，每一次更新代码需要做的事
+	4 git push -u origin master: 推送提交到远程仓库：origin别的远程仓库，master分支上。注意：会提示输入用户名和密码
+		就是git账号和密码，可能会报ssl连接错误，就是git,ssl连接没能成功唤起，连接超时，就多试几次，网络波动问题
+	5 git diff:查看文件变更：针对于文件内容
+	6 git status：查看信息，是否还有文件未提交，针对于文件变动
+	7 git log:文件内容变更记录：git log –pretty=oneline	
+	添加分支
+	1 git checkout -b dev:新增一个叫dev的分支
+	2 git push -u origin dev:提交更新，这时会在远程仓库也新增一个叫Dev的分支，这个分支包含所有信息
+	克隆项目
+	1 自动会有git应用管理，不需要重新git init
+	2 不需要配置远程仓库，git应用自动配置下载地址
+	3 不需要重新创建分支，已有的分支可以切换
+	4 可以直接push 提交
+	版本回退
+		1 git reset --hard HEAD^ 那么如果要回退到上上个版本只需把HEAD^ 改成 HEAD^^ 以此类推。
+		那如果要回退到前100个版本的话，使用上面的方法肯定不方便，我们可以使用下面的简便命令操作：git reset --hard HEAD~100 即可。
+		未回退之前的readme.txt内容如下：
+		2 git reset --hard 版本号
+		git reflog：获取更新版本号
+	
+	git fetch是将远程主机的最新内容拉到本地，用户在检查了以后决定是否合并到工作本机分支中
+	git merge合并到当前分支
+	git pull = git fetch + git merge
+	git pull 命令------相当于是从远程获取最新版本并merge到本地
+
+错误原因：其实这个问题是因为 两个 根本不相干的 git 库， 一个是本地库， 一个是远端库， 然后本地要去推送到远端， 远端觉得这个本地库跟自己不相干， 所以告知无法合并
+
+解决办法：强制下拉合并
+git pull origin master --allow-unrelated-histories
+后面加上 --allow-unrelated-histories ， 把两段不相干的 分支进行强行合并
+强行合并文件同时存在两个版本的代码，这会很有问题
+48 数组
+	1 数组本身是不可以移除元素的  但可以通过中间变量来实现数组的移除
+	2 数组长度一定确定，不可改变，不可增加，不可删除
+	3 数组的空间是不能删除的，数组每个空间中的元素可以设置为null
+	4 删除数组的某个空间，就违背了数组的规则，一旦创建，空间不可改变
+	5 因为数组的空间在磁盘上是连续的 
+	6 不能增加：因为前后的物理磁盘空间可能存放别的数据，不能删啊，从别的地方创建就违背数组的规则了啊
+	7 不能删除：因为删除了中间一个空间，数组的连续性就被破坏了，也就违背了数组的规则啊，删除最后，或者最前空间，不清楚
+49 idea项目
+	1 普通项目：eclipse项目导入到idea里可能需要重新导入模块，才会被idea工具管理
+50 节点
+	1 方法可以组装：一个逻辑实现，可以通过多个方法节点组装
+	2 业务独立：业务层次上分割，独立，上一层业务，不受下一层的影响
+	 
+51 jenkins
+	-- gitlab：修改pom文件，模块版本 > jar版本 > 加项目前缀 > medicom-
+	1 修改service/controller(sources) pom > 对应jar版本,升一个版本 ：生成新的版本jar包
+	2 修改app pom  > 对应jar版本，选择一个版本 ： 选择对应版本的jar，打成war包
+	
+	-- jenkins：根据pom文件，对比版本，重新加载文件 > 构建jar，war > 根据war 重新部署环境
+	1 构建service/controller(sources) pom > 立即构建 > 重新加载service/controller(sources) pom文件 > 加载变更文件
+	2 选择service/controller(sources) > build with parameters > 选择具体哪个模块 > 立即构建 >  构建新的jar包
+	3 构建app pom > 立即构建 > 重新加载app pom 文件 > 加载变更jar
+	4 选择app > build with parameters > 选择具体哪个war > 立即构建 > 根据pom，选择jar，build新的war包 > 
+
+	-- 更新环境：dev/prd
+	5 部署环境dev/prd > build with parameters > 选择具体哪个tomcat服务(对应war包)：这里可以填写war包版本，不填默认最新 > 立即构建 > 替换Tomcat下war
+	
+	-- 查看版本
+	1 查看war版本：app构建 > Build History > 控制台输出，最后面 
+	controller-tech version:yushi-20210419182145
+
+
+
+
+
+			
+
+		
+	
+	
+
+
+

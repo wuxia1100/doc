@@ -1,0 +1,52 @@
+1 ThreadLocal
+  1 用于处理多线程数据存储在本地的功能
+  2 对于多线程的问题，不能用单线程的容器去存储
+2 ioc
+	1 创建的都是单例对象
+	2 自己new的对象是不放被IOC容器托管，对象里所有的spring功能在这个对象里是失效的
+	3 但是在IOC内托管的那个对象，spring所有的功能还是有用的
+	4 多次request请求同一个接口，访问的对象地址值是一样的
+3 延迟消息队列
+	1 Redis RocketMQ
+	2 Redis 键空间通知  ，发布/订阅 ，redis 事件影响发布一个通知，del,exprired
+	3 key-space: 返回的是一个事件执行的类型：del,是新增还是删除，还是过期等等
+	  key-event: 返回的是一个事件执行的key 的值
+	4 开启：开启Redis事件通知 Redis.conf   .... = Ex
+	5 订阅：监听Redis发布的事件通知 ：psubscribe __keyevent@0__:exprired  
+			psubscribe:订阅 > 后面的命令可以通配各种各样，还可以监听指定的name，看怎么配置命令
+			keyevent:监听事件返回值的类型，是返回操作类型，还是返回key值
+			@0：监听0号数据库，默认我们使用的就是0号数据库，一共有16个
+			exprired:监听事件种类：是删除事件，还是过期。。。。
+			
+	6 set值：set 一个 key - value ,并且加上过期事件
+			1 setex name 10 7yue
+			2 set:可以存入一条普通的 key - value
+			3 setex:可以存入一条带有过期时间的 key - exprired - value
+			4 key : name  exprired : 10 默认单位是秒  value：7yue
+	7 指定配置：Redis 启动的时候默认是无配置，也就是不使用配置文件的
+			所以想要我们添加的配置生效，就在需要Redis启动的时候指定配置文件
+			指定配置文件：Redis-server: /user/local/etc/redis.conf
+			重启Redis：redis-cli
+	8 项目配置：配置Redis的连接和服务
+			1 redis:
+				localhost:localhost
+				port:6379
+				database:8   //使用8号数据库
+				password:    //默认无
+				lisen-event:__keyevent@0__:exprired  //监听类型
+	9 项目存值：在项目里向Redis里存入数据
+	10 引入Redis依赖
+	11 使用类：StringRedisTemplate
+	12 使用方法：stringRedisTemplate.opsForValue(key,value,exprired,expriredType);
+				1 key:键，Redis将向我们返回的 ，value：值，用不到，exprired:过期时间,expriredType:设置过期时间的类型：秒，分等
+	13 @Transactional：事物内不能抛出存入Redis的异常，因为一旦抛出异常，用户下单所有的操作都会被回滚，但是这个错误是
+		我们程序自己的问题，跟用户没有关系，所有不能将用户订单的操作回滚
+4 理论上的可靠和不可靠：
+		1 如果严格来说，任何情况都可能发生，那么什么都是不可靠的
+		2 所以存在一个理论上的可靠和不可靠，这个理论上就实际场景和范围，这这个范围内，如果没有问题，我们就可以认为可靠
+		3 如果在这个范围内，存在逻辑上的不严谨，那么就是理论上不可靠，即使发生的概率几乎为0，万年一遇，那也是在逻辑上不可靠
+5 npm
+	1 npm init : 初始化一个npm的json文件，这个json文件就是项目的基本信息和包版本
+	2 npm i :在json文件下，执行安装命令，就会去npm仓库里去找需要的包下载安装
+				
+		

@@ -1,0 +1,31 @@
+-- 客户数据库更换国家后，重置redis语句。 
+curl -i http://172.16.0.115:802/laserDirect/http/get?method=nm.no.clearNocacheProcess&version=1.0&charset=utf-8
+curl -i http://172.16.0.115:802/laserDirect/http/get?method=nm.no.loadNocacheProcess&version=1.0&charset=utf-8
+curl -i http://172.16.0.115:802/laserDirect/http/get?method=up.upOpdata.resetData&version=1.0&charset=utf-8
+curl -i http://172.16.0.115:802/laserDirect/http/get?method=up.upOpdatasc.queryOpdataLoadCache&version=1.0&charset=utf-8
+
+http://172.16.0.115:802/
+
+https://admin.yhp360.com/paas/permission-manager/index.html#/ordersel
+
+
+
+https://admin.yhp360.com/web/os/osoauthconfig/queryOAuthConfigLoadCacheByKey.json
+https://admin.yhp360.com/web/os/osoauthconfig/queryOAuthConfigLoadCacheByGroup.json
+
+curl -i http://172.16.0.115:802/laserDirect/http/get?method=tm.proapp.queryProappMenuTreeLoadCache&version=1.0&charset=utf-8
+
+
+
+
+
+
+-- 菜单 刷新缓存
+-- 1 UpMenu 表 
+https://admin.yhp360.com/web/up/menu/queryMenuLoad.json
+-- 2 am_permission,am_permission_list
+https://admin.yhp360.com/web/am/permissionlist/queryLocalCache.json
+-- 3 tm proapp Menu
+https://admin.yhp360.com/web/tm/Proapp/queryProappMenuTreeLoadCache.json
+-- 4 tm_proapp相关
+https://admin.yhp360.com/web/tm/Proapp/queryProappEnvLoadCache.json

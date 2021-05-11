@@ -1,0 +1,73 @@
+1 事务
+	1 @Test 测试入口没有被事务管理到
+	2 同一个事务对同一条数据修改多次相同的数据，虽然数据库数据没有改变，但是只有第一次修改生效
+2 日志：FATAL > ERROR > WARN > INFO > DEBUG > TRACE
+	-- debug断点可以看到SQL，执行完后控制台没有输出? 为啥只能断点的时候看到SQL
+	## 定义日志root > appenders(根 > 输出> 目的地):必须有两个属性 level-级别，name-命名
+	log4j.rootLogger= debug,sql
+	## 输出目的地定义：定义格式等
+	## 输出目的地:控制台，必须有
+	log4j.appender.sql=org.apache.log4j.ConsoleAppender ： (RollingFileAppender-文件)
+	## 输出格式：必须有
+	log4j.appender.sql.layout=org.apache.log4j.PatternLayout 
+	## 输出时间：可以没有
+	log4j.appender.DebugFile.layout.ConversionPattern = %d{MM-dd HH:mm:ss} [%p] [%t] [%c(%r)] %m%n
+	## 输出级别：rootLogger 根定义级别和appender定义级别，没有优先级，只取最大级别
+	log4j.appender.Console.Threshold = info   
+	-- xml 格式：这种格式以就近原则，最后定义的级别，覆盖外层定义的级别
+	-- 指定输出目的地：指定日志输出到哪里
+	<root>
+        <level value="debug"/>
+        <appender-ref ref="console"/>
+    </root>
+	<!-- 控制台输出日志 -->
+    <appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+        <!-- 日志级别过滤INFO以下 -->
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>DEBUG</level>
+        </filter>
+        <encoder>
+            <!-- 按照上面配置的LOG_PATTERN来打印日志 -->
+            <pattern>${LOG_PATTERN}</pattern>
+        </encoder>
+    </appender>
+	<property name="LOG_PATTERN" value="%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{50} -%msg%n"/>
+	-- 指定输出源：是从哪个包，输出哪个包下的日志
+	 <logger name="cn.apply.mapper" level="DEBUG" additivity="false">
+        <appender-ref ref="sqllog" />
+        <appender-ref ref="STDOUT" />
+    </logger>
+
+	-- 
+	-- 
+	1 只有断点才能看到SQL输出在控制台
+	
+	log4j.rootLogger=debug, stdout
+
+### 把日志信息输出到控制台 ###
+log4j.appender.stdout=org.apache.log4j.ConsoleAppender 
+log4j.appender.stdout.Target=System.out
+log4j.appender.stdout.layout=org.apache.log4j.PatternLayout 
+log4j.appender.stdout.layout.ConversionPattern=%d{yyyy-MM-dd HH:mm:ss} %p [%c] %m%n
+
+### show sql ###
+log4j.logger.com.ibatis=debug
+log4j.logger.com.ibatis.common.jdbc.SimpleDataSource=debug
+log4j.logger.com.ibatis.common.jdbc.ScriptRunner=debug
+log4j.logger.com.ibatis.sqlmap.engine.impl.SqlMapClientDelegate=debug
+log4j.logger.java.sql.Connection=debug
+log4j.logger.java.sql.Statement=debug
+log4j.logger.java.sql.PreparedStatement=debug
+
+
+在log4j.properties中添加下面一行
+
+log4j.logger.com.web.dao=debug
+1
+语法解释：log4j.logger.[package].[class]=[level],[appender]
+
+[package] 包路径，如上面的 com.web.dao 包
+[class] 类名，可不写
+[level] 日志级别， debug
+[appender] 日志输出的地址，可忽略
+这样就可以把com.web.dao包下的所有类里的sql打印出来

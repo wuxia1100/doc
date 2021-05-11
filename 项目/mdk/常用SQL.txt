@@ -1,0 +1,2 @@
+1 ²éÑ¯war·þÎñ
+SELECT * FROM `am_appwar_jar` where APPMANAGE_ICODE like "%rs%";

@@ -1,0 +1,44 @@
+-- 前端-后台 > 交互
+-- 中台：	
+1 注册有礼：bug清单：8  中台	营销	注册有礼，送优惠券数据不对
+	-- 新增 > 代金券 > 选择代金券
+	1 前端调用代金券列表接口：传入参数 > 1 pbCode=0003 类型代金券 ，2 dataState=1，获取进行中 
+	https://admin.yhp360.com/web/pm/promotion/queryPromotionPageCasheQuivalent.json?pbCode=0003
+	rows=10&page=1&dataState=1
+	
+	http://testyunying.hjfood.com/web/pm/promotionplat/queryPromotionPage.json?promotionInType=1
+2 订单: bug清单：35 订单改价，用户端只需要展示在优惠金额里，不需要变更商品单价和商品小计价格
+	-- 订单改价
+	1 前端传值：客户输入的正值 > 优惠价 > 转成负值 :传负值 > subMoney = -1000 
+	http://devcommerce2020072700000001.xytest.qjclouds.com/web/oc/contract/updateContractSubMoneyBuiMat.json
+	subMoney=-100&remark=11&contractId=18273606
+	2 控制输入：输入值 <= 订单价 : 超过提示 > 优惠不能大于订单金额
+	-- 查看：商品单价取值
+	1 前端取值：pricesetNprice 取商品原价 > 放在商品价格显示
+	
+-- 商场
+1 分类搜索：bug清单：33 pc		分类点击商品有误——需具体描述那些商品，严格按一二三级分类来展示商品列表
+	第三级分类页面，进行商品，金额，排序等搜索
+	-- 搜索
+	1 加上 > 1分类参数：classtreeCode=  2 搜索类型：bizType=goods
+	https://www.yhp360.com/web/es/searchengine/find.json?page=1&rows=20&order=asc&sortField=&minPrice=1&classtreeCode=2021022300000046&bizType=goods
+2 发票：bug清单：41 发票流程在确认
+	-- 开票：调用用户填写的发票信息详情 > 回显数据 > 用户不用每次填写基本信息 > 开票
+	1 前端调用详情接口：传入参数userinvId
+	https://www.yhp360.com/web/inv/userinv/getUserinv.json?userinvId=1020
+	
+3 商品详情：
+	https://www.yhp360.com/web/rs/resourceGoods/getResourceGoodsInfoBySkuNo.json?skuNo=PMD9006107
+	-- 值为空时，商品详情不显示 
+	rsPropertiesValueDomainList: null
+4 信保账户
+	-- 信保账户接口
+	Request URL: https://www.yhp360.com/web/crp/pcCrpRecharge/pcGetCrpURecharge.json
+	-- 字段
+	`RECHARGE_ALLMONEY` decimal(15,8) DEFAULT NULL COMMENT '总额度',
+	`RECHARGE_SMONEY` decimal(15,8) DEFAULT NULL COMMENT '剩余额度',
+	已使用 = 总额度 - 剩余额度
+5 个人资质
+	-- 个人资质列表接口
+	https://www.yhp360.com/web/um/userDealer/queryUserinfoapplyPc.json
+

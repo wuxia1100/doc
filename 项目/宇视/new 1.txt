@@ -1,0 +1,53 @@
+
+
+http://gitlab.qianjiangcloud.com/yushi/sourcecode/qjsoft-laser-controller/qjsoft-laser-controller-order.git
+git@gitlab.qianjiangcloud.com:yushi/sourcecode/qjsoft-laser-controller/qjsoft-laser-controller-order.git
+
+
+http://gitlab.qianjiangcloud.com/yushi/sourcecode/yqbsoft-laser-service/yqbsoft-laser-service-order.git
+git@gitlab.qianjiangcloud.com:yushi/sourcecode/yqbsoft-laser-service/yqbsoft-laser-service-order.git
+
+
+刘丹 2021/4/7 3 交易中心/借货下单 1.借货单还货时额度恢复错误：单价为90美金的产品，每次还货10台后，额度是按照1000而不是900的梯度恢复。
+刘丹 2021/4/7 3 结算中心/账户管理/借货账户配置 1.片区的借货额度重置后会出现空白情况。详情见截图。
+
+
+交易中心 1.借货单管理：
+片区总借货额度变动  可用额度
+交易中心 借货单管理：
+1.借货单只还货部分产品就已经显示整单状态“已还货”剩余部分无法转销售；
+2.整单借货转销售时，销售订单还未下行系统显示该借货单“已还货”；
+3.销售订单导入借货单后会把借货单的审批记录也一起导入
+
+
+
+借货订单管理
+
+updateRole
+roleName: 销售
+paramStr: [{"appmanageIcode":"001","menuCode":"YS00101"},{"appmanageIcode":"001","menuCode":"YS00102"},{"appmanageIcode":"001","menuCode":"YS001003"},{"appmanageIcode":"001","menuCode":"YS00109"},{"appmanageIcode":"001","menuCode":"YS00193"},{"appmanageIcode":"001","menuCode":"YS001110"},{"appmanageIcode":"001","menuCode":"YSM00116"},{"appmanageIcode":"001","menuCode":"YS00126"},{"appmanageIcode":"001","menuCode":"YS00135"},
+{"appmanageIcode":"001","menuCode":"YSM00122"},{"appmanageIcode":"001","menuCode":"YS00145"},{"appmanageIcode":"001","menuCode":"YS00144"},{"appmanageIcode":"001","menuCode":"YS00184"},{"appmanageIcode":"001","menuCode":"YS00183"},{"appmanageIcode":"001","menuCode":"YS00123"},{"appmanageIcode":"001","menuCode":"YS00185"},{"appmanageIcode":"001","menuCode":"YS00190"},{"appmanageIcode":"001","menuCode":"YS00188"},{"appmanageIcode":"001","menuCode":"YS00189"},{"appmanageIcode":"001","menuCode":"YS00124"},{"appmanageIcode":"001","menuCode":"YSM00119"},{"appmanageIcode":"001","menuCode":"YS00153"},{"appmanageIcode":"001","menuCode":"YS00150"},{"appmanageIcode":"001","menuCode":"YS00156"},{"appmanageIcode":"001","menuCode":"00000327"},{"appmanageIcode":"001","menuCode":"00000438"},{"appmanageIcode":"001","menuCode":"00000330"},{"appmanageIcode":"001","menuCode":"YS00136"},{"appmanageIcode":"001","menuCode":"00000352"},{"appmanageIcode":"001","menuCode":"YS00132"},{"appmanageIcode":"001","menuCode":"YS00131"},{"appmanageIcode":"001","menuCode":"YS00130"},{"appmanageIcode":"001","menuCode":"inv00008"}]
+opPermissionCode: 1200535
+roleId: 1858
+
+销售账号：
+m00005
+123456
+
+待提审
+web/oc/contract/updateOcontractStateRate.json
+orderDomainStr: 
+{"fchannelCode":"","faccountName":"fasfd","contractEcflag":"11","goodsLogmoney":"1000","dataBmoney":"","goodsPinprice":"","goodsPbillno":"","contractId":18238968,"contractBillcode":"2021040800000082","contractShow":0,"contractAppraise":1,"memberBcode":"10000210372907","goodsSupplierCode":"[{\"addnumber\":\"\",\"delmunber\":\"100\"}]","memberGname":"/paas/shop/2020050600004084/2021-04-08/e0df05c434064d6a8243c56acd73fcde.xlsx","contractUserurl":"PI"}
+
+
+saveRole
+
+
+
+1 品牌经理 》 管理礼品库存
+2 可用量和库存量：需求是什么，现在逻辑是什么。。维护库存的权限可配
+3 品牌经理也要可以申请礼品订单；销售申请礼品订单
+4 礼品商品归类给部门，只能选择各种分类下的礼品进行申请
+5 申请人所属部门，要显示出来
+6 审批通过后，因为客户问题，需要整单撤回（订单作废），回退库存
+

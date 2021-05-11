@@ -1,0 +1,5 @@
+1:命令 拼写错误
+	头晕，不知道到为啥错，搞了半天
+[root@iZuf65zw0dskxihgp6esjiZ ~]# rpm -qa|grep -i mysql
+[root@iZuf65zw0dskxihgp6esjiZ ~]# rpm -qa | gerp -i mysql
+-bash: gerp: command not found

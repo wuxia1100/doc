@@ -1,0 +1,10 @@
+-- 审批流
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/queryHiTaskInst.json
+	-- 保存审批
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/saveTask.json
+	taskId=606971&auditStatus=YES&auditRemark=11
+	-- 领取任务
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/claimTask.json?taskId=606971
+	-- 审批详情
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json
+	Request URL: http://upptestadmin.uniview.com/web/act/actCommon/getTask.json?processId=606924&taskId=606939&fileName=1&type=1

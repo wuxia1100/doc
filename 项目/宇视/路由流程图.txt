@@ -1,0 +1,32 @@
+1 新增客户
+-- 开始：
+1 saveUserDealerForPlatStr.json 平台增加经销商 > 2 code = "um.user.sendOpenUserinfo", name = "会员新增，并开户"  > 3 sendMnsApi = "mns.mns.sendMnslist";
+
+
+a4 "um.user.sendUserinfo", name = "开户进程启动"  > 5  "vd.faccount.saveOpenFaccoun", name = "异步开户" > 6 "vd.faccount.sendOuterCtrlOpenFaccount", name = "发送开户" 7  "vd.faccount.sendOuterCtrlCall", name = "开户回调" 8 setFaccountOuterCtrlCallurl("um.user.udateCallFaccount") um.user.udateCallFaccount", name = "开户成功回调"
+
+
+b4 "um.usersendBase.sendUsersend",name="异步用户信息推送流水新增" 5 "um.usersend.sendUsersend" saveApiUsersend,name="异步用户信息推送流水新增" saveApiUsersend > 6 "um.usersendlist.saveApiUsersendList",name="异步用户信息推送流水新增"
+
+2 保存user,userinfo,userApply
+
+a8 回调：getInternalRouter().inInvoke(vdFaccountOuterCtrl.getFaccountOuterCtrlCallurl(), "1.0", VfinOpenConstants.ROUTER_DIRE_0, map);
+
+b4 poll流掉接口
+
+b5 组装流水sendDataList 路由apicode，这里会有多个业务路由调用
+	umUsersendListDomain.setUsersendApiApicode(umUsersendApi.getUsersendApiApicode()); 没有保存到数据库字段上
+	insert	dis.channelsendBase.sendSaveChannleUserinfo	门店和供应商用户开通渠道
+	insert	ct.custrel.saveCustrelByUserDomain	注册用户分配公司
+	insert	act.actCommonService.activateProcess	审批流
+	insert	up.upOpdata.appendDataByAddUser	推送权限数据
+	insert	unverp.erpCustomer.AddErpCustomerInfo	推送宇视ERP
+
+2 组装sendDate: umUsersendDomain.setUsersendType("insert");
+
+
+重新组装send发送
+curl -i http://10.220.6.194:8017/ um.usersend.loadFlowDataProcess
+
+	@ApiMethod(code="um.usersend.loadFlowDataProcess",name="加载db",paramStr="",description="加载db")
+	void loadUserSendProcess();

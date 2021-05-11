@@ -1,0 +1,125 @@
+1 最想做的是啥
+	创建一个项目
+	项目就是一堆功能各异的文件，分类存放的文件夹
+	对于文件路径有严谨的要求，也就是文件名称，文件存放位置，也因项目有其需要的特定路径，项目逻辑需要
+2 对于一个后台Java项目
+	1 需要有前端web框架 bottstrap html js css
+	2 需要后台通信，对象管理框架 springboot
+	3 需要跟数据交互的数据库框架，原生的jdbc ,sturs2
+3 开发环境的准备
+  1 Java开发环境  安装jdk 配置环境变量
+  2 tomcat Java项目服务器
+  3 navcat 数据库
+  4 idea 开发工具
+4 开发本质
+	1 网络通信 Java中servlet
+	2 数据存储
+	3 数据处理
+	
+5 idea搭建Java项目
+	1 idea集成tomcat服务器
+	2 项目集成tomcat服务器
+	
+6 笔记本 编译Java文件
+  1 javac 路径\文件名.java    (.java 后缀名要加)
+  2 运行编译后的class文件  Java 文件名  (不要加.class后缀, 环境变量没用配置到指定的项目下时，在当前文件夹下执行命令)
+7 tomcat
+	1 启动后的tomcat下，可以访问静态资源：html页面，图片(路径，字母大小写不能错)，静态资源存放后不需要重启tomcat就可以直接访问
+	
+8 静态资源：服务器提供资源本身，浏览器加载资源文件本身，一般浏览器内置了HTML，img等资源文件的加载机制
+
+9 servlt  fiter  可以用来作控制器
+
+jdk是一般的通用类库，它是其它程序的基础。
+servlet是j2ee的一项具体内容，所以你如果想找到这个包，你可以去下载sun的j2ee sdk，里面有，也可以进行单独的下载。
+或者像dooby说的，到tomcat，webloic等web服务器中找。都有相应的实现
+看你JDK是什么版本的，J2SE是不包含servlet的，J2EE包含，下个J2EE的JDK
+
+ servlet 是j2EE 下的一个应用程序，作用：接收数据
+ 
+	1、简单来说servlet是运行在服务器上的java程序
+servlet由servlet容器管理，servlet容器也叫 servlet引擎，是servlet的运行环境，给发送的请求和响应之上提供网络服务
+ 
+	通俗来讲servlet专门用来接收客户端的请求，专门接收客户端的请求数据，然后调用底层service处理数据并生成结果
+浏览器http请求------》tomcat服务器-------》到达servlet-----》执行doget，dopost方法----》返回数据
+<1>客户端发送请求到服务器端
+<2>服务器将请求信息发送至Servlet
+<3>Servlet生成响应内容并将其传给服务器。
+<4>服务器将响应返回给客户端。
+
+3、servlet里的三大作用域：
+
+	request(请求)：它的作用范围是一次请求和响应，是三个作用域中最小的。
+   session（会话）：它的作用比request要大一点，一次会话过程中，它的作用域就一直存在，(默认是30分钟)
+   servletcontext：它作用范围最大，作用于整个服务器中。（Application）
+   
+   百度解释: 但是现在生成动态web内容这个功能一般被jsp所取代
+   Servlet 的主要功能在于交互式地浏览和修改数据，生成动态 Web 内容。这个过程为：
+客户端发送请求至服务器端；
+服务器将请求信息发送至 Servlet；
+Servlet 生成响应内容并将其传给服务器。响应内容动态生成，通常取决于客户端的请求；
+服务器将响应返回给客户端。
+
+10 编程技术
+	1 效率：从效率方向，不断解耦代码，不断简化代码写法，不断规范代码格式等等
+	2 性能：提升软件各种性能
+	3 工具：不断优化，整合提取出经常使用的功能
+	4 应用：如果开发工具，运行环境等等，支撑项目开发，发布，运行，测试，维护的应用
+	
+11 servlet 和 Filter
+	servlet 1 项目启动时不会初始化 2 请求路由匹配后开始初始化 3 处理
+	Filter  1 项目启动时初始化   2 请求路径匹配后处理
+
+	Web服务器在与客户端交互时Servlet的工作过程是:
+
+1.     在客户端对web服务器发出请求
+
+2.     web服务器接收到请求后将其发送给Servlet
+
+3.     Servlet容器为此产生一个实例对象并调用ServletAPI中相应的方法来对客户端HTTP请求进行处理,然后将处理的响应结果返回给WEB服务器.
+
+4.     web服务器将从Servlet实例对象中收到的响应结构发送回客户端.
+　Servlet容器负责加载和实例化Servlet。当Servlet容器启动时，或者在容器检测到需要这个Servlet来响应第一个请求时，创建Servlet实例。当Servlet容器
+
+启动后，它必须要知道所需的Servlet类在什么位置，Servlet容器可以从本地文件系统、远程文件系统或者其他的网络服务中通过类加载器加载Servlet类，
+
+成功加载后，容器创建Servlet的实例。因为容器是通过Java的反射API来创建Servlet实例，调用的是Servlet的默认构造方法（即不带参数的构造方法），
+
+
+	
+12 在 Java Web 里，为什么写 Servlet , Filter 的时候不需要 main() 方法，却可以运行？
+在 Java Web 开发时看不到 main() ，因为 Tomcat 程序本身就是一个 Java程序， main()方法在 Tomcat程序里。
+
+实际上，Tomcat本身就是一个框架，它会加载APP, 读取 WEB-INF\web.xml 下的配置，从中读取相应的Filter 和 Servlet。
+
+所以，当我们写好 Filter, Servlet后，只需要把 web.xml 里配置好。。然后，当Tomcat启动时，它会自动地加载我们写的 Fiter / Servlet。
+
+13 springboot 为啥要写main方法的application文件
+使用SpringBoot的应用是需要将应用代码编译打包成jar包，然后基于main方法的方式来独立启动这个应用，使得该应用作为一个独立进程运行。
+这是跟传统的将项目打包成war包，然后部署到tomcat服务器去运行的一个区别。	
+
+14 spring 和 springmvc
+	spring 用于对象管理
+	spirngmvc 用于控制跳转，请求处理
+15 struts2 和 springmvc
+	struts2 基于Filter实现，针对于一个action，也就一个类
+	springmvc 基于servlet实现，针对一个方法做请求处理
+16 spring boot只是一个配置工具,整合工具,辅助工具.
+	springmvc是框架,项目中实际运行的代码
+	Spring 是一个“引擎”；
+	Spring MVC 是基于Spring的一个 MVC 框架；
+	Spring Boot 是基于Spring4的条件注册的一套快速开发整合包。
+17 struts2
+   1 一个action就是一个路径请求处理，也可以是一个Filter专门处理这个request的请求
+	
+18 创建项目
+
+JPA Project：JPA（一种对象bai关系映射规范）du项目
+Enterprise Application Project：企zhi业应用项目dao
+Dynamic Web Project：动态1653网站项目
+EJB Project：企业Java Bean规范的项目
+Connector Project：连接器项目
+Application Client Project：应用程序客户端项目
+Static Web Project：静态网站项目
+Maven Project：基于Maven（一种构建工具）构建的项目
+Project：普通项目（点击后可选择不同的类型）

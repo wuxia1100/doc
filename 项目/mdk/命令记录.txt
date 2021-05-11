@@ -1,0 +1,18 @@
+1 查看服务
+kubectl get pod,svc -o wide
+1 查看日志路径
+kubectl logs -f controller-goods-6d79f96947-tnl42
+cd /data/logs/laser/paas/
+tail -f -n 1000 error.log
+2.通过文件服务连接至对应的服务器，日志路径如下
+/data/xingyun/logs/com-rg/app/error
+3.jar包 在服务器的 
+/usr/local/tomcat/webapps/ROOT/WEB-INF/lib/ 这个目录下面菜单
+
+--com-goods
+kubectl exec -it com-goods-74544dff9b-7twmq bash
+cd /data/logs/laser/paas/com-goods/error
+
+--controller-goods
+kubectl exec -it controller-goods-6d79f96947-tnl42 bash
+cd /data/logs/laser/paas/controller-goods/error

@@ -1,0 +1,189 @@
+1 原型机新增
+{
+  "classtreeName": "123",
+  "classtreeCode": "2021012600000069",
+  "goodsProperty1": "adfadf",
+  "goodsProperty2": "fsd",
+  "goodsProperty3": "2021-04-18 00:00:00",
+  "goodsProperty4": "2021-04-18 00:00:00",
+  "goodsProperty5": "2021-04-18 00:00:00",
+  "goodsProperty": "2021-04-18 00:00:00",
+  "pricesetType": "1",
+  "goodsSpec": "asfasd",
+  "goodsMaterial": "2",
+  "memberCode": "",
+  "goodsHdate": "2021-04-18 00:00:00",
+  "goodsOdate": "2021-04-18 00:00:00",
+  "memberContactQq": "adsf",
+  "goodsWebremark": "asdf",
+  "goodsWeight": "1",
+  "goodsSpec1": "11111",
+  "goodsSpec2": "1",
+  "goodsSpec3": "云存储PDT",
+  "goodsSpec4": "1",
+  "goodsSpec5": "1",
+  "goodsOrigin": "32",
+  "pntreeCode": "100000918",
+  "rsSkuDomainList": [
+    {
+      "skuName": "0",
+      "goodsWeight": "1",
+      "goodsMaterial": "2",
+      "skuNo": "0",
+      "goodsNum": "1",
+      "pricesetNprice": "1",
+      "pricesetRefrice": "",
+      "pricesetMakeprice": "",
+      "pricesetAsprice": "",
+      "rsGoodsFileDomainList": [
+        {
+          "name": "1618379598(1).jpg",
+          "url": "/paas/shop/2020050600004084/2021-04-18/bdc16450b69e4476b6139b2a57093e63.jpg",
+          "goodsFileUrl": "/paas/shop/2020050600004084/2021-04-18/bdc16450b69e4476b6139b2a57093e63.jpg",
+          "uid": 1618740731080,
+          "goodsFileType": "0",
+          "goodsFileName": "bdc16450b69e4476b6139b2a57093e63",
+          "status": "success",
+          "goodsFileSort": "image",
+          "goodsFilesortName": "商品图片"
+        }
+      ]
+    }
+  ],
+  "onSubmitNext": 1,
+  "pricesetNprice": 1,
+  "goodsNum": 1,
+  "rsGoodsFileDomainList": [
+    {
+      "name": "1618379598(1).jpg",
+      "url": "/paas/shop/2020050600004084/2021-04-18/bdc16450b69e4476b6139b2a57093e63.jpg",
+      "goodsFileUrl": "/paas/shop/2020050600004084/2021-04-18/bdc16450b69e4476b6139b2a57093e63.jpg",
+      "uid": 1618740731080,
+      "goodsFileType": "0",
+      "goodsFileName": "bdc16450b69e4476b6139b2a57093e63",
+      "status": "success",
+      "goodsFileSort": "image",
+      "goodsFilesortName": "商品图片"
+    }
+  ]
+}
+
+
+
+-- 新增客户
+
+{
+  "proappCode": "A级",
+  "qualityQtypeCode": "1",
+  "qualityQtypeName": "浙江宇视科技有限公司",
+  "umUserinfoQuaDomainList": [
+    {
+      "userinfoQuaKey": "firstName",
+      "userinfoQuaVaule": "李"
+    },
+    {
+      "userinfoQuaKey": "surname",
+      "userinfoQuaVaule": "四"
+    },
+    {
+      "userinfoQuaKey": "companyJobs",
+      "userinfoQuaVaule": "Java"
+    },
+    {
+      "userinfoQuaKey": "corporateSector",
+      "userinfoQuaVaule": "Java"
+    },
+    {
+      "userinfoQuaKey": "topAreaCode",
+      "userinfoQuaVaule": "+86"
+    },
+    {
+      "userinfoQuaKey": "riskGrade",
+      "userinfoQuaVaule": ""
+    },
+    {
+      "userinfoQuaKey": "typeTran",
+      "userinfoQuaVaule": ""
+    },
+    {
+      "userinfoQuaKey": "contract",
+      "userinfoQuaVaule": ""
+    },
+    {
+      "userinfoQuaKey": "supplyChannel",
+      "userinfoQuaVaule": ""
+    },
+    {
+      "userinfoQuaKey": "numberOfStaff",
+      "userinfoQuaVaule": 1
+    },
+    {
+      "userinfoQuaKey": "numberOfCompanyStores",
+      "userinfoQuaVaule": 1
+    },
+    {
+      "userinfoQuaKey": "officialWebsite",
+      "userinfoQuaVaule": "www.baidu.com"
+    },
+    {
+      "userinfoQuaKey": "registeredCapital",
+      "userinfoQuaVaule": "1"
+    },
+    {
+      "userinfoQuaKey": "registrationTime",
+      "userinfoQuaVaule": "2021-04-07T16:00:00.000Z"
+    },
+    {
+      "userinfoQuaKey": "numberOfSubordinateCustomers",
+      "userinfoQuaVaule": 1
+    },
+    {
+      "userinfoQuaKey": "revenueInThePastYear",
+      "userinfoQuaVaule": "111"
+    },
+    {
+      "userinfoQuaKey": "securityProductsSalesRatio",
+      "userinfoQuaVaule": "100"
+    },
+    {
+      "userinfoQuaKey": "areaCode",
+      "userinfoQuaVaule": "+86"
+    }
+  ],
+  "departCode": "685e389b8feb400291cfc2c524fc4c43",
+  "departName": "中国区",
+  "roadName": "afsa",
+  "userinfoCompname": "afasdfasdf",
+  "userinfoTel": 15034325432,
+  "userinfoCert2No": "223232",
+  "userinfoSort": 545,
+  "fax": "223232",
+  "userinfoCert1No": 561,
+  "provinceName": "",
+  "cityName": "",
+  "areaName": "",
+  "companyAddress": "汉中小区",
+  "userinfoCertUrl": "http://upptestadmin.uniview.com/paas/shop/2020050600004084/2021-04-19/1aced2d5c8614c409b3368830b8d871a.jpg",
+  "userinfoConPhone": 1503452342,
+  "userPhone": 1503452342,
+  "userinfoEmail": "270270094@qq.com",
+  "userPwsswd": "123456"
+}
+
+
+--客户-员工
+
+[
+  {
+    "custrelCode": "435124634883457024",
+    "custrelPhone": "test51",
+    "userinfoCode": "10000210396868",
+    "userinfoCompname": "Pandaria Technology P/L",
+    "userCode": "2021041200000001",
+    "employeeCode": "433999662689550336",
+    "employeeName": "51",
+    "departName": "270470035@qq.com",
+    "tenantCode": "2020050600004084"
+  }
+]
+11

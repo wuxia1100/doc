@@ -1,0 +1,34 @@
+1.1. 运行tomcat
+docker run -it --rm -p 8888:8080 tomcat:8.5
+
+1.2. 运行redis. 192.168.10.223:56379
+docker run -it --rm -p 56379:6379 redis
+
+2. 查看运行的docker
+docker ps
+
+3. 停止docker, <Container-ID>是第2步看到的
+docker stop <Container-ID>
+
+4. 发布web应用到docker.
+docker cp -a <Local-Machine-Path> <Container-ID>:<Container-Path>
+
+5. 修改docker中的文件
+	. 进入Docker
+	docker exec -it <Container-ID> /bin/bash
+	. 修改文件，比如tomcat的server.xml
+	vi /usr/local/tomcat/conf/server.xml
+	. 提交修改。如果不提交，停止容器后，所有修改全部丢失
+	docker commit <Container-ID>
+
+6. 查看docker image
+	docker images
+
+7. 拷贝Docker. 原始image:/mnt/data/docker/images/tomcat-8.5
+	docker save <Image-ID> -o <Local-Machine-Path>
+
+8. 加载docker.
+	docker load < <Local-Image-Path>
+
+9. 本地路径映射
+	-v <Local-Machine-Path>:<Container-Path>

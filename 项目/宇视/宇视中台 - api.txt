@@ -1,0 +1,600 @@
+0 登录
+-- 登录 
+Request URL: http://upptestadmin.uniview.com/web/ml/mlogin/loginIn.json
+-- 获取菜单
+Request URL: http://upptestadmin.uniview.com/web/mi/mindex/getTopPerMenuListFPc.json
+-- 获取用户信息
+Request URL: http://upptestadmin.uniview.com/web/um/userservice/getUserserviceInfo.json?userId=404522
+-- ？返回空
+Request URL: http://upptestadmin.uniview.com/web/da/opsumlist/queryOpsumListPageForPlat.json
+-- ？
+Request URL: http://upptestadmin.uniview.com/web/da/opsumlist/queryOpsumListNextPageForPlat.json
+-- ？为啥还要登一遍
+Request URL: http://upptestadmin.uniview.com/web/ml/mlogin/logininfo.json
+-- ？干嘛用
+Request URL: http://upptestadmin.uniview.com/web/bi/bindex/index.json
+
+
+1 组织：和具体业务关联，数据权限，公司的权限，业务范畴
+	1 公司：宇视:20000210314491,浙江宇视科技有限公司
+		--列表 
+		1 Request URL: http://upptestadmin.uniview.com/web/org/company/queryCompanyPage.json	
+	2 部门：5级，国际市场部，国家，大区，片区，地区（城市）：第五级，地区做国家渠道，具体的销售业务点，部门下面会有很多销售
+		--新增：所属企业，上级部门，部门名称	
+			-- 所有企业
+		 	Request URL: http://upptestadmin.uniview.com/web/org/company/queryCompanyPage.json
+			rows=10&page=1
+			-- 不知道干了啥，没有任何数据返回
+			Request URL: http://upptestadmin.uniview.com/web/org/company/getCompanyTreeByCode.json
+			-- 上级部门
+		 	Request URL: http://upptestadmin.uniview.com/web/org/depart/queryDepartPage.json
+			companyCode=20000210314491&departPcode=-1
+			-- 保存 
+		 	Request URL: http://upptestadmin.uniview.com/web/org/depart/saveDepartAndSaveUser.json
+			companyCode=20000210314491&departPcode=81270c3963ac4493b3e659de755cf535&departPname=&departName=ce&userinfoSort=2
+		-- 列表页
+			-- 公司信息
+			Request URL: http://upptestadmin.uniview.com/web/org/company/queryCompanyByGS.json
+			-- 公司信息
+			Request URL: http://upptestadmin.uniview.com/web/org/company/getCompanyByCompanyCode.json?companyCode=20000210314491
+			-- 所有部门
+			Request URL: http://upptestadmin.uniview.com/web/org/depart/queryDepartPage.json
+	3 计划员国家配置：负责人？
+		-- 列表
+		Request URL: http://upptestadmin.uniview.com/web/org/depart/queryDepartPagebyPcode.json
+		rows=10&page=1
+		-- 详情
+		Request URL: http://upptestadmin.uniview.com/web/org/depart/getErpDepartList.json
+		-- 编辑 ：办事处ID，计划员
+			-- 办事处ID
+			Request URL: http://upptestadmin.uniview.com/web/org/depart/getErpDepartList.json
+			-- 编辑 
+			Request URL: http://upptestadmin.uniview.com/web/org/depart/updateDepart.json
+			departId=1808&departAddress=0100&departContacts=066841&companyCode=20000210314491
+	4 职位列表：每个部门，各个层级的职位名称：总经理，工程师，策划师等等，一个人可以有多个职位，可以在多个部门工作吗？？那就属于组织，特殊部门
+		-- 列表 
+		Request URL: http://upptestadmin.uniview.com/web/org/position/queryPositionPage.json
+		rows=10&page=1
+		-- 新增职位：公司名称，职位类型，职位名称，选择角色-(职位和角色建立关联，职位也就有了角色权限的属性，可以关联多个角色)
+		Request URL: http://upptestadmin.uniview.com/web/org/position/savePositions.json
+		paramStr: [{"companyCode":"20000210314491","positionShortcode":null,"positionType":"0","positionName":"11","roleCode":"1200566"}]
+		-- 编辑 
+		Request URL: http://upptestadmin.uniview.com/web/org/position/updatePositions.json
+		Request URL: http://upptestadmin.uniview.com/web/org/company/queryCompanyPageByZW.json
+		-- 停用 
+		Request URL: http://upptestadmin.uniview.com/web/org/position/stoppedPositionState.json
+		positionId=3947
+		-- 启用 
+		Request URL: http://upptestadmin.uniview.com/web/org/position/updatePositionState.json
+		positionId=3947
+	5 客户配置：每个客户是属于哪个销售维护，对接的：一一对应
+		-- 列表 
+		Request URL: http://upptestadmin.uniview.com/web/ct/custrel/queryAllUCustre.json
+		rows=10&page=1
+		-- 新增客户关系：公司名称，员工名称，客户名称
+			-- 员工名称
+			Request URL: http://upptestadmin.uniview.com/web/org/employee/queryEmployeePageByKH.json?companyCode=20000210314491
+			companyCode: 20000210314491
+			-- 客户名称
+			Request URL: http://upptestadmin.uniview.com/web/ct/custrel/queryCustrelPageBygx.json?companyCode=20000210314491
+			companyCode: 20000210314491
+			-- 保存 
+			Request URL: http://upptestadmin.uniview.com/web/ct/custrel/saveCustrelEmp.json
+		-- 更换员工：已绑定1个员工，可以再编辑继续选择一个员工
+			-- ？
+			Request URL: http://upptestadmin.uniview.com/web/ct/custrel/queryCustrelEmpPage.json
+			custrelCode: 435183574841294848
+			-- 员工姓名：每次点击查询一次，是否合适？ 最多绑定两个员工？不是只能绑定一个吗？
+			Request URL: http://upptestadmin.uniview.com/web/org/employee/queryEmployeePage.json?notDepartFlag=1
+			notDepartFlag: 1
+			-- 保存 
+			Request URL: http://upptestadmin.uniview.com/web/ct/custrel/saveCustreEmp.json
+			-- 删除员工绑定：没有权限删除，谁有这个权限呢
+			Request URL: http://upptestadmin.uniview.com/web/ct/custrel/deleteCustrelEmpupdateState.json
+			custrelEmpId: 27658
+	6 员工列表：宇视各个部门下，所有职位的人员
+		-- 列表 
+		Request URL: http://upptestadmin.uniview.com/web/org/employee/queryEmployeePage.json
+		-- 新增员工：域账户(唯一)，姓名，邮箱(唯一)，密码，组织-（多个新增失败），职位（只能有一个职位）
+		Request URL: http://upptestadmin.uniview.com/web/org/employee/saveEmployeePlusStr.json
+		-- 编辑 ：组织-可以多个，可以跨地区，编辑的时候就可以，新增不行，应该是编辑没有管控住
+			-- 员工信息
+			Request URL: http://upptestadmin.uniview.com/web/org/employee/getEmployeePageByCode.json?employeeCode=435845626698137600
+			employeeCode: 435845626698137600
+			-- 保存编辑
+			Request URL: http://upptestadmin.uniview.com/web/org/employee/updateEmployeeToDeparts.json
+		-- 停用 
+		Request URL: http://upptestadmin.uniview.com/web/org/employee/updateEmployeeState.json
+		employeeId=16436&dataState=-1
+		-- 启用 
+		Request URL: http://upptestadmin.uniview.com/web/org/employee/updateEmployeeState.json
+		employeeId=16436&dataState=0
+
+
+2 权限管理：应用后台的权限，可以看到哪些菜单，使用哪里功能，是公司权限的映射，但又不完全，因为数据，业务还会跟部门走
+	1 管理员列表：针对于应用而已，应用后台的操作人员，公司很多部门的人可能都不需要知道有这个应用后台，也不需要使用
+				  这部分人不关注业务，只负责应用平台的组织管理	
+		-- 页面
+		-- 角色查询
+		Request URL: http://upptestadmin.uniview.com/web/up/role/queryRolePageByPT.json
+		-- 列表 
+		Request URL: http://upptestadmin.uniview.com/web/um/userservice/queryUserPage.json
+		-- 新增：登录账户，手机号，密码，重复密码，真是姓名，是否启用，角色
+		Request URL: http://upptestadmin.uniview.com/web/um/userservice/saveUserserviceByPcode.json
+		userName=wuxia1100&userPhone=15026449834&userPwsswd=123456&checkPass=123456&userRelname=qq&dataState=0&userType=1&roleCode=1200566
+		-- 编辑 
+		Request URL: http://upptestadmin.uniview.com/web/um/userservice/updateUserserviceByAdmin.json
+		userId=410306&userName=wuxia1100&userPhone=15026449834&userRelname=qq1&roleCode=1200566
+		-- 修改密码 
+		Request URL: http://upptestadmin.uniview.com/web/um/userservice/updatePsw.json
+		password=1234567&checkPass=1234567&userId=410306
+		-- 停用 
+		Request URL: http://upptestadmin.uniview.com/web/um/userservice/stoppedUserservice.json
+		userId: 410306
+		-- 启用 
+		Request URL: http://upptestadmin.uniview.com/web/um/userservice/updateUserserviceState.json
+		userId: 410306
+	2 角色列表：和职业列表差不多，就是职位的映射，但它是应用平台的权限管理(线上)，职位是公司业务的权限管理(线下)，基本上是一致的
+		但是角色列表没有部门的层级关系，这种(纵向)层级关系很重要，角色只有(横向)权限，这种权限因为没有层级，所有不能传递和延伸
+		只能是你这个角色有哪个菜单，就能做哪个事
+		但业务很多时候是串联，延伸，有层级关联的，所以角色就做不到，就像数据权限，只能通过有层级关联结构的部门来实现
+		1 只能选择某个应用的权限，不能跨应用
+		-- 列表 
+		Request URL: http://upptestadmin.uniview.com/web/up/role/queryRolePage.json
+		-- 新增 ：角色名称，选择权限-（多个菜单）
+		Request URL: http://upptestadmin.uniview.com/web/up/role/saveRole.json
+		roleName: fasdf ,paramStr: [{"appmanageIcode":"001","menuCode":"YS001051"}]
+		--编辑 
+			-- 查询角色权限
+			Request URL: http://upptestadmin.uniview.com/web/up/opPermission/queryOpPermissionPageByJS.json
+			opPermissionCode: 1200568
+			-- 保存编辑
+			Request URL: http://upptestadmin.uniview.com/web/up/role/updateRole.json
+			roleName: fasdf，paramStr: [{"appmanageIcode":"001","menuCode":"YS00102"},{"appmanageIcode":"001","menuCode":"YS001051"}]，opPermissionCode: 1200568，roleId: 1891
+		-- 删除 
+		Request URL: http://upptestadmin.uniview.com/web/up/role/deleteRole.json
+		roleId: 1891
+	3 平台角色管理：可以选择是哪种角色类型，可以添加有哪里应用的权限，可以添加哪些应用下，具体的哪些权限
+		-- 新增：角色类型-（平台，卖家，买家），角色名称，产品-（B2B-H5,B2B-PC,B2B-运营,B2C-H5,业务中台），选择每个应用下的菜单权限
+			-- B business 企业 C consumer 消费者，O2O(online-offline):线上线下
+		Request URL: http://upptestadmin.uniview.com/web/up/role/saveRoleByProappCode.json
+		roleType: 2，roleName: 1212，appmanageIcode: 001，paramStr: [{"menuCode":"YS001051","appmanageIcode":"001"}]
+		-- 编辑：有问题，产品被禁用，无法选择
+		-- 删除：
+		Request URL: http://upptestadmin.uniview.com/web/up/role/deleteRoleByPT.json
+		roleId: 1890
+	4 用户权限管理：可以给平台上所有的用户分配角色权限，但是不能添加
+	5 操作员权限：可以给操作员分配角色权限，但是不能添加操作员，只能分配权限
+3 客户管理：具体的线下实体店，客户
+	1 客户列表：客户的类型有啥业务意义？只是区分，看一下？
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/um/userserviceinfo/queryUserinfoservicePage.json?userinfoBtate=0
+	rows=10&page=1&opdatascsType=um_userinfo&userinfoQuality=dealer
+	-- 导出 
+		Request URL: http://upptestadmin.uniview.com/web/um/userserviceinfo/queryUserInfoByGSCurrency.json?exportFlag=true&excelTemplate=ysQua
+		Request URL: http://upptestadmin.uniview.com/paas/user-manager/static/js/285.61694dd4c57e1237fbad2021.04.02.11.01.56.js
+		-- 查询客户
+		Request URL: http://upptestadmin.uniview.com/web/fm/file/queryExportExcelFile.json
+		--下载
+		Request URL: http://upptestadmin.uniview.com/paas/shop//var/exportExcel/2020050600004084/2021-04-17/f2f5f25ddcd24dfdafb8fbc20095ffee.xls
+	-- 编辑 
+		-- 查询类型：数据没有用到
+		Request URL: http://upptestadmin.uniview.com/web/um/qualityQtype/queryDealerQualityQtypePage.json
+		-- 查询部门：数据没有用到
+		Request URL: http://upptestadmin.uniview.com/web/org/depart/queryDepartPagebyPcode.json
+		-- 用户信息
+		Request URL: http://upptestadmin.uniview.com/web/um/userserviceinfo/queryUserinfoById.json?userinfoId=507343
+		-- 保存编辑 
+		Request URL: http://upptestadmin.uniview.com/web/um/userserviceinfo/updateUserinfoForUser.json
+	-- 查看：基本信息，高层信息，历史订单，购买商品，收货地址，货代信息，产品配置，优惠券
+		-- 基本信息 
+		Request URL: http://upptestadmin.uniview.com/web/um/userserviceinfo/queryUserinfoById.json?userinfoId=507343
+		-- 历史订单 
+		Request URL: http://upptestadmin.uniview.com/web/oc/contract/queryContractForUser.json?userinfoCode=10000210396868
+		-- 购买商品 
+		Request URL: http://upptestadmin.uniview.com/web/oc/contract/queryContractGoodsForUserRule.json?userinfoCode=10000210396868
+		-- 收货地址 
+		Request URL: http://upptestadmin.uniview.com/web/um/address/queryAddressForUser.json?userinfoCode=10000210396868&addressType=0
+		-- 货代信息 ：接口应该调用错了？
+		Request URL: http://upptestadmin.uniview.com/web/um/address/queryAddressForUser.json?userinfoCode=10000210396868&addressType=3
+		-- 产品配置：制式，能耗
+			-- 保存配置
+			Request URL: http://upptestadmin.uniview.com/web/um/umUserinfoQua/saveUserinfoQuas.json
+		-- 优惠券 
+		Request URL: http://upptestadmin.uniview.com/web/pm/usercoupon/queryUsercouponByUserRule.json?memberBcode=10000210396868
+	-- 禁用 
+	Request URL: http://upptestadmin.uniview.com/web/um/userservice/updateToJoinBlacklistS.json
+	userinfoCodeList=10000210396868&tenantCodeList=2020050600004084&userinfoblakRemark=1
+	-- 查询禁用客户 
+	Request URL: http://upptestadmin.uniview.com/web/um/userservice/queryUserinfoblakPage.json
+	rows=10&page=1&opdatascsType=um_userinfoblak
+	-- 解禁
+	Request URL: http://upptestadmin.uniview.com/web/um/userservice/updateToRemoveBlacklist.json
+	userinfoblakIdList: 120
+	
+	2 新增客户：-- 基本信息
+				选择国家(5级地区)，企业简称，企业全称，	联系电话，邮政编码，传真号码，公司人数，公司门店数，官网地址，注册时间，
+				下级客户量-业务关联在哪？，一年营收，签约类型-客户类型，经销商等级-根据客户类型，风险等级，合同主体-数据哪里来？，
+				安防产品营收，公司地址，营业执照
+				--高层信息 
+				名，姓，职位（手写），部门（手写），电话，邮件，密码，确认密码			
+	-- 查询部门 ：没有用到
+	Request URL: http://upptestadmin.uniview.com/web/org/depart/queryDepartPagebyPcode.json
+	-- 查询类型
+	Request URL: http://upptestadmin.uniview.com/web/um/qualityQtype/queryDealerQualityQtypePage.json
+	-- 保存添加 
+	Request URL: http://upptestadmin.uniview.com/web/um/userDealer/saveUserDealerForPlatStr.json
+	3 黑名单列表：拉黑了
+	4 子账号管理：当前管理员，创建的管理员账号
+	5 合同管理：客户签约的合同，上传到平台
+	6 进销存数据管理：企业上传了哪些数据，多少数据上传了哪些数据，多少数据
+	7 等级设置：数据库初始化，后台只能看，有几种客户分类，分类下有哪些几个级别
+	8 客户导入：批量同步客户
+	-- 下载模板 
+	Request URL: https://qjstatic.oss-cn-shanghai.aliyuncs.com/yushi/ysmemberList.xlsx
+	-- 确认导入 
+	Request URL: http://upptestadmin.uniview.com/web/um/userMerchant/saveBatchOperatorByDealerYunyingStr.json
+4 商品中心
+	--原型机
+	1 产品周期列表：所有原型机
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPageStr.json
+	-- 查看 ：多个保存按钮，点击没有反应
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/getResourceGoodsPass.json
+	goodsId: 538388
+	-- 分类：编辑时用到
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/queryClasstree.json?dataState=2
+	-- 编辑 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/updateResourceGoodsPass.json
+	2 新增产品周期：-- 基本信息 
+					原型机bom-相当于唯一主键code，原型机型号，BP型号，后台分类，TR4时间，TR4A时间，TR5时间，EOM时间，EOS时间，EOL时间
+					产品描述，商场描述，体积，重量，默认维保年限，最大维保年限，二次包装数量，所属PDT,产品定位，备注，商品图片上传，上传视频	
+	-- 查询 ：原型机bom
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryErpBaseResourceGoods.json
+	productCode: 1234	
+	-- 图片
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/queryGoodsFilesortByPnTreeCode.json?pntreeCode=100000262
+	pntreeCode: 100000262
+	-- 保存添加 
+		-- 校验规格
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/checkResourceGoodsToGoodsSpec.json
+		goodsSpec=1234&goodsOrigin=32
+		-- 保存
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/saveResourceGoods.json
+	3 原型机导入：批量同步原型机
+	-- 下载模板 
+	Request URL: https://qjstatic.oss-cn-shanghai.aliyuncs.com/yushi/prototypeList.xlsx
+	-- 确认导入
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/saveResourceGoodsToBoms.json
+	--商品 
+	1 商品发布：添加商品，根据原型机和ERP同步数据
+				原型机bom，原型机型号，平台分类，下单bom，下单型号，体积，重量，默认维保，最大维保 （这些都是查询原型机带出来的数据）
+				产品系列，库存，币种，计价单位，起订量，目录价，销售授权价，国家经理价，大区价，片区价，销管价，国际市场部价，
+				添加关联商品（这是干啥的？）
+				是否立即上架：立即上架，会推送到所有渠道
+	-- 查询：点击查询时，查询下面接口
+		--查询原型机 
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPageStr.json
+		-- 查询规格
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/fetchSpeOptByPntCodeNomRel.json
+		-- 查询品牌
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/queryBrandRelationPage.json
+	-- 查询ERP
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryErpBaseResourceGoodsByBOM.json
+	-- 确认添加
+		-- 保存商品
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/saveResourceGoods.json
+		-- 不知道干啥的？
+		Request URL: http://upptestadmin.uniview.com/web/wh/opstore/saveSkuToStore.json
+
+	2 发布组合商品：套餐商品，摄像头+内存卡+硬盘等等
+				  添加组合商品（输入每种商品数量），商品分类，下单型号，下单bom,计价单位，起订量，库存，商品图片上传，视频上传，edit编辑
+				  商品价格：根据商品自动计算
+	-- 查询分类
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/queryClasstreeForUser.json
+	-- 查询分类 ：两个查询的结果是一样的，有啥意思？
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/queryClasstreeForUser.json
+	--干啥的？
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/getvirtualorentity.json?path=ysPack
+	--添加组合商品，查询sku
+	Request URL: http://upptestadmin.uniview.com/web/rs/sku/querySkuInventory.json
+	-- 上传图片
+	Request URL: http://upptestadmin.uniview.com/web/rs/goodsFile/uploadGoodsFiles.json
+	-- 确定保存
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/saveResourceGoodsTc.json
+	3 商品导入：批量同步商品
+	-- 下载模板
+	Request URL: https://qjstatic.oss-cn-shanghai.aliyuncs.com/yushi/goodsList.xlsx
+	-- 确认导入
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/releaseResourceGoods.json
+
+	--商品管理 
+	1 组合商品列表：套餐商品
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsFromTc.json?goodsPro=5
+	-- 上架 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/updateGoodsUpForPlat.json?goodsIdStr=538630
+	-- 下架 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/updateGoodsDownForPlat.json?goodsIdStr=537891
+	-- 查看 
+	Request URL: http://upptestadmin.uniview.com/web/rs/sku/querySkuFromTcToStr.json
+	-- 编辑商品图片 
+	Request URL: http://upptestadmin.uniview.com/web/rs/goodsFile/queryGoodsFilePage.json
+	skuCode: 2021041700000358
+	-- 编辑 ：编辑失败，要选择运费模板，页面还没这个东西
+		-- 查询单位 
+		Request URL: http://upptestadmin.uniview.com/web/rs/unit/queryUnitPage.json
+		-- 查询运费模板 
+		Request URL: http://upptestadmin.uniview.com/web/rs/unit/queryUnitPage.json
+		-- 查询商品详情
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/getResGoodsFromTcEdit.json
+		goodsId: 538630
+	2 返利账期设置：只能看，所有的商品
+	-- 列表
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryRtagGoodsPage.json
+	3 下单商品列表：可以下单的商品，是goods?sku?
+		1 上架：商品上架会推送给所有的国家渠道，每个渠道都会复制，创建一套新的商品（商品，sku，file，spec等）
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPagePaltStr.json
+	-- 上架 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/updateGoodsUpForUser.json
+	goodsIdStr: 538585
+	-- 下架 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/updateGoodsDownForUser.json
+	-- 批量上架 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/updateStoreResourcesPass.json
+	goodsIdStr: 538629,538585
+	-- 批量下架 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/updateCannelResourcePaas.json
+	goodsIdStr: 538004,538041
+	-- 批量删除 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/batchDeleteResourceGoodsPass.json
+	goodsIdStr: 537807,538004
+	-- 查看 
+	Request URL: http://upptestadmin.uniview.com/web/rs/sku/querySkuFromTcStr.json
+	-- 编辑 
+		-- 查询商品详情 
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceBase/getResourceGoods.json
+		-- 确认修改 
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/updateResourceGoods.json
+	--商品配置
+	1 商品分类：内存，车载，热像仪，具体的电商分类，相当于洗发水，方便面，耳机
+	-- 列表
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/queryClasstreePage.json
+	-- 新增 ：分类名称，备注
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/saveClasstree.json
+	classtreeName=test323&memo=11&classtreeParentcode=-1&Visible=false&classtreeLast=1&classtreeType=0
+	table:rs_classtree:
+	-- 新增子分类 
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/saveClasstree.json
+	classtreeName=sdfaadfaf&memo=afas&classtreeParentcode=2021041700000001&Visible=false&classtreeLast=1&classtreeType=0
+	-- 编辑 ：必须修改名字，不然报错名字重复
+	-- 删除：存在子节点，必须先删除子节点
+		-- 查询商品：分类下有商品，不能删除
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPage.json
+		classtreeCode: 2021041700000078
+		-- 删除 
+		Request URL: http://upptestadmin.uniview.com/web/rs/classtree/deleteClasstree.json
+		classtreeId: 48434
+	Request URL: http://upptestadmin.uniview.com/web/rs/classtree/updateClasstree.json
+	classtreeName=sdfaadfafadf&memo=afasasf&classtreeParentcode=2021041700000001&classtreeLast=1&classtreeId=48434&classtreeType=0
+	2 商品类型：礼品，商品，电子，海外，客工部礼品，这些商品用来干嘛的，用来卖给用户，还是公司内部使用
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/rs/pntree/queryPntreePage.json
+	-- 新增 ：类型名称，关联品牌，关联规格组
+		-- 查询 规格组
+		Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/listSpecGroupQueryFromPntree.json
+		-- 新增 
+		Request URL: http://upptestadmin.uniview.com/web/rs/pntree/savePntree.json
+	-- 编辑 
+	Request URL: http://upptestadmin.uniview.com/web/rs/pntree/updatePntree.json
+	-- 删除 
+	Request URL: http://upptestadmin.uniview.com/web/rs/pntree/deletePntree.json
+	pntreeId=2998&pntreeName=adsf
+
+	3 商品规格：规格组：手机（和商品分类差不多） 规格信息：内存，颜色，规格选项：126G,68G 黑色，白色，金色
+				每一种规格组：就是一类商品，商品详情的如入口，在这里有规格组的概念是不是有点限制了，例如颜色在很多商品都要用
+							  那么每种商品都要设置一遍，是否	有这个必要？
+							  好处就是每种商品都有自己一套的规格，添加商品时，只需要关联规格组就可以，不需要针对具体的sku
+							  问题是sku才是商品，有自己的库存，价格，图片，避不开的sku选择和设置啊
+				每一种规格信息和规格选择的组合，就是一个具体的sku(真正卖的商品)
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/listSpecGroupQuery.json
+	-- 新增 ：规格组名称
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/saveSpecGroup.json?specGroupName=adf&memo=
+	-- 编辑 
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/editSepcGroup.json?specGroupName=adf&specGroupId=8747&memo=&pntreeCode=
+	-- 删除 ：存在子项无法删除
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/deleteSpecGroup.json?specGroupId=8747
+	-- 规格信息查询
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/querySpecPage.json?specGroupCode=434711469620199424
+	-- 新增规格信息：规格信息名称
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/saveSpec.json
+	-- 编辑规格信息 
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/updateSpec.json?specName=adfa&specId=22493&specGroupCode=434711469620199424&memo=
+	--删除规格信息：存在子项无法删除
+	Request URL: http://upptestadmin.uniview.com/web/rs/specGroup/deleteSpec.json?specId=22493
+	-- 新增规格选项
+	Request URL: http://upptestadmin.uniview.com/web/rs/specOption/saveSpecOption.json?specCode=434712010060464128&specOptionName=adf&specGroupCode=434711469620199424&specOptionNum=afaf
+	-- 编辑规格选项
+	Request URL: http://upptestadmin.uniview.com/web/rs/specOption/updateSpecOption.json?specOptionId=100026&specGroupCode=434711469620199424&specCode=434712010060464128&specOptionName=adf&specOptionNum=afaf
+	-- 删除规格选项
+	Request URL: http://upptestadmin.uniview.com/web/rs/specOption/deleteSpecOption.json?specOptionId=100026				
+	4 商品品牌：宝马，奔驰，这里只有宇视一家公司的产品，就是宇视
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/rs/brand/queryBrandPage.json
+	-- 新增：品牌名称，品牌图片，备注	
+	Request URL: http://upptestadmin.uniview.com/web/rs/brand/saveBrand.json
+	-- 编辑 
+	Request URL: http://upptestadmin.uniview.com/web/rs/brand/updateBrand.json
+	-- 删除 
+	Request URL: http://upptestadmin.uniview.com/web/rs/brand/deleteBrand.json
+	-- 图片上传 
+	Request URL: http://upptestadmin.uniview.com/web/rs/goodsFile/uploadGoodsFile.json
+
+	5 商品参数：跟着商品类型绑定？某种类型的商品有哪些属性，礼品
+	-- 查询商品类型 
+	Request URL: http://upptestadmin.uniview.com/web/rs/pntree/queryPntreeTree.json
+	-- 查看商品类型参数
+	Request URL: http://upptestadmin.uniview.com/web/rs/prop/queryPropertiesPage.json?pntreeCode=100001287&propertiesType=1
+	-- 新增 ：名称
+	Request URL: http://upptestadmin.uniview.com/web/rs/prop/saveProp.json?propertiesName=adf&pntreeCode=100001287&propertiesType=1
+	-- 编辑 
+	Request URL: http://upptestadmin.uniview.com/web/rs/prop/updateProperties.json?propertiesName=adf&pntreeCode=100001287&propertiesType=1&propertiesId=25133
+	-- 删除 
+	Request URL: http://upptestadmin.uniview.com/web/rs/prop/deleteProperties.json?PropertiesId=25133	
+	--资料管理
+	1 资料列表
+	2 添加资料
+	3 资料分类
+	--礼品管理
+	1 礼品发布:添加销售拜访客户，可以申请的商品，分类，名称，库存，价格
+	-- 新增 ：礼品名称，礼品编码，计价单位，库存，可用量，商品图片上传，商品价格，是否上架
+		-- 单位
+		Request URL: http://upptestadmin.uniview.com/web/rs/unit/queryUnitPage.json
+		-- 上传
+		Request URL: http://upptestadmin.uniview.com/web/rs/goodsFile/uploadGoodsFiles.json
+		-- 确认新增：sku名称为空错误？
+		Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/saveResourceGoodsType.json
+
+	2 礼品列表:有哪些礼品可送
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/rs/resourceGoods/queryResourceGoodsPagePaltMatter.json
+
+	3 礼品分类：地推用的，拜访客户，公司活动
+	--客工部商品
+	1 商品发布：分类，名称，库存，价格
+	2 商品列表：
+	3 商品分类：公司活动
+5 渠道
+	1 就相当于电商平台里的一个个商家，大的商家就是总店，平台店
+    2 商品管理，就是平台拥有的所有商品
+	3 国家渠道：销售，分销商拥有的商品，例：上海分销商只能卖A,B,C三个产品
+	4 客户渠道：就是实体店，分销商对接的实体店从公司拿货卖，销售可以配置客户能拥有哪些产品，就是能买哪些，例如A,B
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/dis/channel/queryChannelPageBySS.json
+	5 客户商品价格：设置A,B商品卖给客户多少钱，量多优惠啥的，销售有自己的底价，但是平台也有自己的底价，所以销售设置价格平台得审核
+	  不然就有漏洞，销售乱搞了
+	  -- 初始化
+	  需要先给客户初始化商品，有了商品之后才有价格设置
+	-- 列表 
+	Request URL: http://upptestadmin.uniview.com/web/dis/dprice/queryDpricePageBySS.json
+
+6 库存：库存只能看，并不能管控，设置，管控的入口在商品设置里，或者别的地方，但对于运营很有用，必须知道平台商品库存情况
+	1 仓库：有哪些仓库，例如:美国仓，上海仓，杭州仓,配置哪些销售可以从哪些仓库中卖货
+	2 商品总库存：A 商品宇视工厂一共生产了10000件
+	3 仓库库存：A商品运往美国仓5000，上海仓5000，杭州仓没有库存，那么杭州的销售就不能卖A商品
+	4 库存同步：选择哪些商品，哪些类型的商品，同步库存
+	5 入库列表：库存增加流水：所有各种业务场景，类型的增加
+	6 出库列表：库存减少流水：所有各种业务场景，类型的减少
+7 交易中心
+	-- 订单
+	1 订单列表：目前只有带客户下单的来源，提交审核，审核后，转入ERP
+		1 申请待提审 > 提交审核 > 审核中 > 审核成功转ERP
+		2 审核失败 > 重新提审 > 审核中
+		3 订单处理中 ，交易关闭，交易完成	
+	--订单ERP:ERP系统同步
+	1 待录ERP：下单后，成功处理，审核的订单就会变成待录ERP，
+		1 录入ERP：可以拆单，1000个商品，可以拆成1000个单，一个一个商品发货，每次拆单支付一次，也可以整单支付录入
+		2 可以修改地址，运送方式，支付方式
+	2 已录ERP：支付成功的订单，待发货状态
+		1 取消订单：取消需要审核，取消成功后应该退库存，账户余额等吧
+		2 支付订单：为什么这里还有这个支付，不是已经支付过了，都是待发货状态了吗
+	3 子订单处理：这里只有查看，和取消
+	4 订单修改对比：所有订单修改流水，可以看到每次修改的地方是标红的
+	5 应收管理：收款流水，只能查询
+	--代客下单：因为没有前端，现在只能销售帮客户下单
+	1 代客下单：1 选择客户 2 选择商品加入购物车 3 选择发货仓库 4 购物车选择商品结算  5 选择地址，发货方式，商品规格等下单
+	--借货单
+	1 借货申请：1 收货，方式，要货时间，是否打托盘，借货类型-展会，销售拓展，发货来源-研发，供应链，运费，核销方式-，发货来源-研发，供应链，运费，核销方式-	转销售，转退货，核销时间，借货原因
+				商品配置列：制式：电源，能耗
+				2 办事处没有借货额度，申请失败
+	2 借货列表：
+				1 申请待审核 > 待还货 > 还货 > 还货审批中 > 已还货
+					-- 审核失败	已逾期 
+					-- 待还货 > 续借 > 续借审批中 > 待还货 > 已逾期
+					-- 取消审批中
+	--礼品订单
+	1 发起申请：1 选择商品 2 购物车结算 3 下单：活动类型，负责人，运输方式-自提，随发货，发货时间，申请原因
+	2 申请列表：审核失败 交易关闭 审核中 订单处理中 交易成功 审核成功  审批撤销
+		1 审批撤销：不要了
+	3 礼品导出列表：导出需要处理的礼品订单，给到发货人员，去发货
+	4 礼品发货列表：查询哪些礼品申请单需要处理
+	--客工部礼品
+	1 发起申请：1 选择商品 2 购物车结算 3 下单：活动类型，负责人，运输方式-自提，随发货，发货时间，申请原因
+	2 申请列表：审核失败 交易关闭 审核中 订单处理中 交易成功 审核成功  审批撤销
+		1 审批撤销：不要了
+	3 礼品导出列表：导出需要处理的礼品订单，给到发货人员，去发货
+	4 礼品发货列表：查询哪些礼品申请单需要处理
+8 服务中心
+	1 退单列表：处理退货的单子，客服处理
+	2 消息列表：查询发送了哪些站内信
+	3 新增消息：客服发送站内信
+9 营销中心：目前没有前端商场，还没有
+	--商场营销
+	1 新增量价活动：发布一次活动：活动内容，促销名称，促销规则：按件，1-n 件 减多久美元，选择商品或者全场促销，选择客户，参与次数，时间，
+	退款是否返活动（针对于参与次数而言），	是否参与返利	：确认无反应，列表中增加了很多个，没有做重复点击控制
+	2 量价活动列表：待审核 > 待发布 > 待开始 >  进行中 > 已结束 > 待总结 > 审核失败
+	3 活动参与
+	4 新增满赠活动：
+		发布一次活动：活动内容，促销名称，促销规则：按件，1-n 件 减多久美元，按金额（满多少，赠商品-选择赠品），选择商品或者全场促销，选择客户，参与次数，时间，
+		退款是否返活动（针对于参与次数而言），	是否参与返利
+	5 满赠活动列表：待审核 > 待发布 > 待开始 >  进行中 > 已结束 > 待总结 > 审核失败
+	6 新增代金券：代金券名称，代金券面值，代金券类型，选择门店，选择商品，发放数量总数，发放数量每个门店，发放时间
+				  红包有效期，退款是否返还活动
+	7 代金券列表：待审核 > 待发布 > 待开始 >  进行中 > 已结束 > 待总结 > 审核失败	已停用
+	--
+	1 营销设置：活动优先级
+	2 营销审核：通过，拒绝
+	 
+10 内容中心：前端页面，内容维护
+	1 内容配置：1 站点选择 2 栏目：首页，分类，商品详情
+		1 首页：轮播，新品推荐，行业资讯，更多好货
+	2 页面配置：配置商场页面各种常用的模块，轮播，魔方等
+	3 栏目列表：站点，首页模板，明细模板，栏目名称，上级栏目，排序，栏目标识：启动，编辑，删除
+	4 新增文章：选择站点，所属栏目，文章标题，文章副标题，作者，排序，图片，视频，第三方视频ID，edit编辑框
+	5 文章列表：停用，编辑，删除
+	6 广告列表：站点，所属栏目，广告位，广告名称，URL，类别-图片，视频，文件上传，说明
+		--新增，发布，编辑，删除
+	7 新增站点：站点名称，产品，热搜关键词，主域名，二级域名，模板，商场logo-文件上传，站点底部信息-edit编辑
+	8 站点列表：查看，编辑，停用
+		
+11审批管理
+	1 代客下单审批 2 订单退货审批 3 订单取消审批
+	1 借货单审批 2 借货退货审批 3 借货取消审批 4 借货还货审批 5 借货续借审批
+	1 礼品单审批 2 客工部礼品单审批 3 代客下订单审批 4 借货单审批
+	2 商品特价审批
+	3 信保审批
+	4 经销商注册审核
+	5 物料申请审核
+12 结算中心
+	-- 账户管理
+	1 账户余额：1 对公，每个部门的账户配额（借货款额度） 2 对私 每个商户的信保额度
+	2 新增充值申请：充值账户 充值金额 充值名目 合同号 凭着号码 上传凭证
+	3 充值申请列表：待提审 审核成功 审核失败 充值成功 充值失败
+	4 ERP汇款管理：
+	5 账户流水：账户流水明细，可导出
+	6 借货账户配置：
+		1 新增：选择办事处 ，借货额度，如果列表已有，输入金额，相当于查看，增加账户借货额度
+		2 查看：输入金额，会增加借货额度
+	7 信保申请：客户账户余额不够，可以选择信保支付：10000单子，余额8000，信保账户5000，2000可以选择使用信保
+	8 信保账户：
+	--发票管理
+	1 发票审核：待审核 审核通过 审核失败
+13 配置 
+	1 支付配置：十几种支付渠道方式
+		1 状态：开启，关闭
+		2 配置：配置支付对接的第三方appid,publickey,privatekey,等等
+	2 汇率配置：人民币和美元的汇率：手写，保存，如果错了。后台很多订单金额转化都会出差，这个很重要吧，手写安全？实时？
+	3 基础配置：后台logo，商场描述
+	4 物流配置：新增物流 （名称），启用：下单时候就可以选择了吗？
+	5 权限管理：应用后台的权限，可以看到哪些菜单，使用哪里功能，是公司权限的映射，但又不完全，因为数据，业务还会跟部门走
+	6 组织管理：
+	7 日志管理：
+		1 操作日志：平台所有的动作记录，例：登录，下单
+		2 路由日志：
+		3 用户日志：登录，异常，操作
+14 首页 
+	1 支付订单数 支付金额  支付人数 新增会员量 累计会员数
+	2 待支付订单 待发货订单  待审核退单
+	3 常用功能

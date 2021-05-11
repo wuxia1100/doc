@@ -1,0 +1,225 @@
+
+
+1 后台地址：
+	http://upptestadmin.uniview.com
+	17000000000
+	yushi123
+	http://service.xytest.qjclouds.com/
+	chenzhinan
+	123456
+1 项目框架
+	1 springMVC + mybatis ,mysql,redis
+	2 
+
+2 流程: 项目架构流程
+	1 request > 2 controller > 3 facade > 4 serviceImpl > 5 daoMapper > 6 Mapper.xml
+	2 facade : controller 和 service 层的桥接：作用就是controller相当于用户操作界面,facade相当于request，service相当于controller
+	  能够让service层方法的调用，变成面向service层路由的调用，这一层可以当做一层切面，处理controller请求参数，处理service返回数据	
+	  htmlIBaseService:中间连接层，路由code：oc.contractEngine.sendUpdateContract 对应service的方法，code就是桥接点
+	3 model:返回给视图层--用于保存到数据库（一一对应数据库表字段，一致，不少） ，domain:对应数据表表结构（不完全一致可能少字段），
+		用于接收request请求参数封装，或者保存的数据库
+		2 将domain转成model :因为model字段全啊
+	4 mysql:路由维护的SQL,由于打包工具变化，功能失效，不能自动更新数据库，需要手动维护数据库的路由
+	5 applicationContext-dao: 配置daoMapper接口和mapper.xml文件的实现对象映射，在springboot中是@mapperScan注解完成这个工作的
+	  applicationContext-service: 注入service接口实现实例对象，创建工厂是baseTransactionProxy，
+		框架封装的工厂，应该有解析路由工作，事物配置工作，动态代理
+	  applicationContext:注入一些框架对象，事务，引擎，流程等等功能性的东西
+	6 util:一些常用的工具类
+	7 engine: 引擎，不懂干嘛的
+	8 processes: 流程,业务的流程
+	7 Test: 
+	10 ReDomain:表示从数据重新读取的对象数据，用于数据处理
+3 模块：项目模块业务
+	1 activiti: 审批流程
+	2 ai: 项目模块管理
+	3 apadtation: 适配器
+	4 appmanage: api操作控制类
+	5 um(userManager) :用户管理	，权限，地址
+	6 sp :合同管理
+	7 dd :系统参数
+	8 tm(tenant):支付方式，租客产品管理
+	9 wl:物流管理
+	10 up(userPermission):用户权限管理
+	11 ul(userLevel)：用户级别设置
+	12 org:机构管理
+	13 ct: 客户服务，客户配置	
+	14 log:日志管理	
+	15 oc(orderController)：订单管理
+	16 mns():消息管理
+	17 pm(promotionManager):营销管理
+	18 cms:内容管理，文章，广告管理
+	19 pfs:模板，数据源
+	20 vd(virtualDepositor):结算管理，账户管理
+	21 inv():开票管理
+	22 fm(fileManage) :文件管理
+4 xingyun:
+	1 把配置文件信息，变成后台管理，可以动态维护，并且动态生效的功能模块
+		a 配置文件信息都变成了表信息
+		b 加载表信息
+5 审批流程：系统审核，配置审核节点，不用用户手动审核
+	1 提交审核
+		a 保存提交数据
+		b 开启线程，添加下一步审核回调指令（code），到Redis 队列中
+			1 创建入队线程：new PprocessPutThread(getPprocessService(), (OcContractService) SpringApplicationContextUtil.getBean("ocContractService"), pprocessList)	
+				1 获取节点集合 2 获取业务service(查询数据库) 
+				3 获取流程service：存入节点到队列，从队列中获取节点执行
+					1 获取订单引擎：数据库关于订单一系列操作，和关于订单的一系列业务操作
+					2 创建出队线程：先于入队线程的创建
+			2 getPprocessService().addPutPool：执行入队线程
+			3 那么出队线程实在哪里被执行的？
+			4 下一步：组装下一步执行需要的数据
+		c 
+		d 队列
+			1 类使用map,list的一个容器，底层数据结构不同
+	2 在数据库配置推送审批流节点: 提交审核信息 > 修改订单 > 查询节点 > 轮询执行节点 > 触发推送审批流(配置审批回调路由) > 激活审批流 > 回调审批回调 > 处理审批业务
+6 权限
+	1 菜单权限：根据角色划分
+	2 数据权限：根据地区划分，表结构	
+	3 功能权限：根据路由划分
+7 量化
+	1 价格：价值的量化标准，不然无法统计，没有概念，只有量化了之后，才会知道具体多高，多重，而不是它很高，很重
+8 模块关联 - 方法调用的方式 > 模块不关联，路由调用  解耦合
+9 项目
+	a 平台架构 1 初始化应用 2 初始化组织 3 初始化组织权限 4 初始化管理员 5 初始化平台人员 
+	b 平台资源 1 初始化客户 2 初始化商品 3 初始化渠道商品 4 初始化平台内容(广告等)
+	c 平台业务 1 审核 2 订单
+10 解耦-关联
+	1 模块直接的互相交互，都是通过路由的方式，路由就得有转发地，也需要数据
+	2 返回在入口处触发路由，1 可以使项目代码层次分明，A 方法就做A的事 ，B 方法就做B的事
+	3 B 方法需要的数据，由A方法处理完之后返回，为了实现层次分明，就需要对数据返回做处理，这个工作是必须且有意义的
+	4 A模块调用不了B模块里的方法，引入关联B之后是可以使用，但是引入关联模块之间就有了关联关系，就失去了解耦的目的，不是不能这样实现
+	而是为了解耦，继而为了项目可以自由装配这个目的，而不这样去做，所以才引入了路由转发，这个中间件
+	5 为了实现某种功能，必须得做出额外的工作，这个是必须且合理的
+	6 A,B,C,D需要做一个产品，顺序是A>B>C>D:
+	A做完A工序，返回资源A+，给B。B拿到资源A+做完B工序，返回资源A+B+,给C,C拿到A+B+资源做C工序，返回资源A+B+C+,给D。D完成最后组装
+	一个业务可能A,B,C或者更多，都是在装备工作，真正的业务在最后一步，
+	这种方式的意义和必要性在哪
+	必要性：后续工作需要前面先处理完，拿到处理完的东西才可以做
+	意义：这种工作模式，就相当于流水线，层次分明，对于生产而言是效率高，对于开发而言，是结构，健壮可维护，
+	如果A,b,c,d同样拿资源F做各自的事，这种模式是否还合适？
+11 菜单权限：
+	1 菜单很细致，很多单独的功能点拆分成一个菜单，很多几种类型的业务拆分成几个菜单
+	2 意义：1 菜单权限拆分，A 只做一个功能就可以，其它功能不需要做，所以需要拆分出来 2 只做一部分业务，业务分工很细致，这是对应公司业务场景拆分的
+12 sendData : 出现任何异常时，都可以回溯数据，继续业务：数据才是业务执行的环境，保证
+	1 只要是异步，就可能出现异常，就需要做数据备份，就是sendData,如果没有数据备份，异步线程挂了，出现异常怎么办，这个业务还怎么进行下去，没有数据了啊
+	就相当于你存银行的钱被清空了，你怎么买东西，这就是数据备份的意义，保证即使异步各种原因挂了，还有数据可循，可以保证业务继续走
+	2 sendDataBack: 业务流水，这张表的数据，就是在异步中处理业务时，备份的，删除sendData数据：
+		a 保证sendData 数据流水不会很大 
+		b 保证异步线程处理业务时出现异常，可以通过sendDataBack，回溯数据，继续处理业务
+	3 通过线程保存的：如果保存的线程挂了，数据没有保存成功，业务没有回滚，数据就不一致，业务还怎么回溯，再进行下去？
+		不是通过线程保存的，是循环保存，一个线程里，每次保存最大保存50条数据，for循环
+	4 最后保存，先保存主体业务？不一定，
+13 模型架构
+	1 渠道：渠道就是商品的挂载点，就相当于线下的实体店铺，线上淘宝店铺，小贩的推车等，没有挂载点，商品怎么就无法销售，流动
+14 上架
+	1 更新商品 2 组装商品更新数据sendData 3 更新sku 4 组装sku更新数据sendData 5 处理关联商品 6 组装关联商品sendData 
+	7 返回所有组装sendData到上一级入口处 8 保存所有sendData流水到数据库 9 返回sendDataList到上一层 
+	10 开启存入线程，存放sendDataList到队列，开启poll线程，从队列中取出sendDataList，在poll线程中通过路由调用别的模块的接口，并传入sendData
+		poll线程从sendDataList中每次只取一个sendData，一个对象，一条数据处理业务
+		调用的接口会实现A-B,闭环调用结构，进行轮询调用，直到队里中sendDataList里的对象全部取完，为空时停止？不是这样的
+		是do{}while(true),轮询sendDataList
+	11 模块接口入口处，先对拿到的sendData对象处理，检验，封装，先新增sendDataListBak流水备份，再删除数据库sendDataList流水
+	12 封装了sendData,flowData，两个一样的东西，有啥意义？会现在查询rsChannelApi,如果有数据才会封装flowData业务处理对象
+	13 处理了channelApiCode,这个有啥用？如果有channelApiCode才会返回flowData，控制走哪个else if(),业务处理类型
+		循环封装rsChannelSendApiList集合，也就是有一种channelSendApiCode 就复制sendData创建一个新的业务对象flowData封装进channelSendApiCode对象里
+		最后会已sendData为模板，用rsChannelSendApiList集合作为材料，封装出一个flowDataList集合处理所有类型的业务
+		-- 构建apicode:根据apiCodeconf配置规则构建
+	14 封装sendData,flowData两个集合到sendBean对象，返回到入口调用处
+		--
+		最后在封装sendDataList集合时，会先备份，再删除流水，然后再查询数据库流水（这里其实是个空集合），封装到sendBean里去
+		那么在入口处，根据sendDataList集合判断是否轮询，就是不会轮询了
+	15 flowData 对象用来传入业务处理，不为空，则调用业务处理接口，触发业务的对象
+		用作于处理业务，做完处理环节的流水，可能根据模板复制很多出来，处理不同类型的业务
+	16 sendData 用来控制闭环轮询，不为空，则轮询闭环结构，控制闭环结束的对象， 但是好像并没有什么用啊，不太知道具体是怎么走的\?
+		用作于发送，传输，传输环节的流水，可能作为一个模板\?
+	删除flowData,保存flowDataFinish流水完成记录
+	17 从flowDataList中取出一个flowData对象，调用
+	18 根据code选择业务类型
+	19 批量推送商品到渠道业务：从缓存中查询所有要推送的渠道，创建所有渠道的商品，
+	20 校验channel
+	21 校验disDgoods商品同步规则一大堆校验，完全看不懂为啥要这样做
+	22 判断组合商品
+	23 创建渠道商品
+	24 创建渠道商品的sku
+	25 处理商品库存：一大堆逻辑
+	26 保存商品：又是一大堆新增加的商品，一大堆sendDataList，需要返回入口处，做同步处理
+	
+15 poll线程 
+	1 每次都开辟了100个线程，从队列中取数据处理，每次只取一个，所有理论上返回的集合一次处理不超过100条数据，是没有问题的，如果超过100条数据会怎样呢
+	
+16 轮询：搞不懂项目里到底是用哪种循环，怎么实现的
+	1 A-B：结构轮询
+	2 for循环开辟线程
+	3 do{} while(true) 循环
+17 反射
+	1 利用反射获取操作对象，可以解耦，跨模块
+18 字段 
+	1 业务字段：每一个字段，中的每一种类型，都是一种业务场景，一大堆处理逻辑
+	2 显示字段：展示就完事，最简单的
+	3 计量字段：字段的值是需要业务处理，计算出来的
+	4 关联字段：一般是主键code，作为数据直接的关联关系建立来用
+	5 时间字段：
+	6 状态字段：数据的状态，一般是数据的生命周期，一段业务的流程扭转状态
+	7 类型字段：数据分组
+	8 字典字段：标识，具体的
+	9 备注字段：备份数据
+	10 排序字段： 排序
+19 send：调用另一个模块的方法，需要下面的一系列步骤：每个模块基本都有下面6张表，用于管理模块间交互的数据备份和路由管理
+	数据备份：因为有的是线程调用，没有事务保证业务数据同步回滚，为了不管线程出现什么异常，都可以有数据回溯，保证继续业务
+	路由管理：为了模块解耦，实现功能模块可装配，不需要编写代码时建立模块关联
+	1 组装sendData
+		1 sendDataApi：下个模块的路由 2 sendDataApiconf：操作方式 通过这两步配置获取，下一个模块路由 和 处理业务的操作类型insert,update
+	2 发送sendData 3 组装sendDataList流水(封装处理逻辑方法路由) 4 发送sendDataList流水 5 调用处理逻辑路由 
+	-- 这如果失败则更新sendDataList操作状态
+	6 备份sendDataListBak流水 7 删除sendDataList流水
+	-- 表业务意义
+	send：A 向 B，模块发送的数据：数据在A模块保存
+	sendBak:A 向 B，模块发送完数据，B 模块接受到sendData数据，组装完sendDataList业务具体操作的对象，删除send,备份sendBak
+	sendApi:A 向 B,发送请求的路由 ： 根据sendData中得sendApiType 获取api 路由对象
+	sendApiConf:A 向 B,发送请求的路由 ,操作方式，执行什么动作，增删改查等
+	sendList:B 接收到 A,把send封装成，sendList业务操作流水对象，
+	sendListBack:B 处理完sendList业务操作流水对象，备份，删除sendList
+20 flow
+	1 flow:节点信息 > 节点分类
+	2 flow_node：子节点信息 > 规定每一个节点的业务类型
+	3 flow_process：节点流程 > 节点执行流水，每一个节点执行都要生成流程流水，然后根据流水执行业务
+	4 flow_service：节点服务 > 节点业务对应具体的业务
+	5 flow_ctrl：节点引擎 > 获取节点流程，知道当前流程执行到哪里了
+	--
+	1 创建flow_process时，把flow_service信息维护到flow_process（订单流程）里
+	2 保存flow_process时，维护flow_ctrl（节点引擎）当前订单流程是什么
+	3 执行flow_process时，维护flow_ctrl（节点引擎）下一个当前订单流程是什么
+	-- 抓取节点规则
+	1 flow_ctrl：获取订单流程
+	2 CFLOW_NODE_NEXTCODE：当前订单引擎里存放的流程（最后一次执行成功的节点），流程中存放的下一个流程的code
+	2 CFLOW_NODE_PARENTCODE：上一个流程的CFLOW_NODE_NEXTCODE值，select * from flow_node where CFLOW_NODE_PARENTCODE = CFLOW_NODE_NEXTCODE(上一个流程的)
+	-- 判断规则
+	-- excetuCon > 匹配业务类型，业务场景
+	1 startType：1 当前start相等 > 生效   2 通过startTpye过滤处起始进程
+	2 endFlow: CFLOW_NODE_NEXTCODE = CFLOW_CODE && startType相等
+	-- excetuConJs > 校验限制条件
+	1 CFLOW_NODE_CONDITION: if(ocContractDomain.pricesetCurrency1=='杭州'){return 'ok';} else {return 'error';}
+	 if(null!=dataState&&2==dataState){return 'ok';} else {return 'error';} > 1 只有条件校验过，返回ok,才会更新订单状态，订单引擎等
+	-- index > 执行顺序
+	1 nowIndex > 99 && nowIndex != 100： 不执行
+	-- 业务流程备份
+	1 先更新订单状态，和订单引擎 > 如果线程执行失败，可以根据订单引擎找到当前执行到哪一个流程了 > 继续执行订单引擎就可以回溯业务
+	2 订单引擎：记录业务流程,先更新，保证即使失败也可以回溯，回来重新执行
+	3 获取当前进程 > 获取下一步流程 > 判断，校验，过滤，筛选符合下一步流程 > 创建流程 > 保存流程 > 更新订单，更新订单引擎，更新子订单(callStart通过配置条件判断是否更新)
+				   > 执行订单节点流程 > 更新节点流程执行状态 > 更新订单，更新订单引擎，更新子订单（callEnd通过配置条件判断是否更新）
+				   > 不是结束，重新之前所有操作（当前流程，查询下一步流程，而不是通过订单引擎查询）
+	-- 更新引擎规则:执行前的数据状态 <> 执行后的数据状态
+	-- callEnd
+	1 回调条件：CFLOW_NODE_CALLCON > 1 只有节点存在此数据才会更新订单状态，订单引擎等
+	2 回调参数：CFLOW_NODE_CALLPARAM > {"dataState":"1","oldDataState":"9"}
+	-- callStart
+	1 回调条件：CFLOW_NODE_SCALLCON
+	2 回调参数: CFLOW_NODE_SCALLPARAM >{"dataState":"9","oldDataState":"0"}
+	-- 节点构建
+	1 数据库初始化节点
+	2 数据库初始化节点服务
+	3 加载到redis缓存
+	
+21 正式发布
+	1 tag-test-images : 在测试服务器，打tag，填写版本
+	2 正式： 1 填写测试服务打的tag版本 2 填写修改的war服务，多个分行

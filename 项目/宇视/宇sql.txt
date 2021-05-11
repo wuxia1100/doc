@@ -1,0 +1,85 @@
+-- 上架所有商品
+update rs_resource_goods set DATA_STATE = 2;
+
+11179
+
+916
+
+SELECT *  FROM `rs_sku` where SKU_NO = "0236C02U" and GOODS_NAME = "GV-EBD4711-04";
+
+SELECT COUNT(*) FROM rs_resource_goods
+SELECT COUNT(*)  FROM `rs_sku`
+
+SELECT DISTINCT GOODS_CODE,GOODS_NAME FROM rs_resource_goods
+
+SELECT  DISTINCT GOODS_NAME FROM rs_resource_goods WHERE GOODS_NAME IS NOT NULL
+
+SELECT * FROM rs_resource_goods WHERE GOODS_NAME = "IPC2122LR3-PF28M-D"
+
+#查询商品
+SELECT * FROM `rs_resource_goods` WHERE GOODS_CODE = "2021030300000020";
+SELECT * FROM `rs_resource_goods` WHERE GOODS_CODE = "2021041500000472";
+SELECT * FROM `rs_resource_goods` WHERE GOODS_SPEC = "aaaaaa";
+SELECT * FROM rs_spu where SPU_CODE = "435028094550540288";
+
+SELECT * FROM rs_sku where GOODS_CODE = "2021041500002189" and TENANT_CODE = "2021032500010648";
+
+SELECT * FROM rs_sku where GOODS_NAME = "aaaaaa"	and SKU_NO = "aaaaaa";
+SELECT * from rs_goods_file where GOODS_CODE = "2021041500002189";
+
+SELECT * from rs_goods_rel where GOODS_CODE = "2021041500002189";
+#商品变更记录
+SELECT * from rs_senddata WHERE FD_BIZCODE = "2021041500002189";
+SELECT * from rs_senddata WHERE FD_BIZCODE = "2021041500002116";
+
+#原型机添加没有维护
+SELECT * from rs_goods_wh where GOODS_CODE = "2021041500002189";
+SELECT * from rs_goods_shop where GOODS_CODE = "2021041500002189";
+
+
+#国家渠道
+SELECT * from dis_channel where CHANNEL_TYPE = 8
+#客户渠道
+SELECT * from dis_channel where CHANNEL_TYPE = 0 and CHANNEL_SORT = 2
+#客户商品价格
+SELECT * from dis_dprice where CHANNEL_SORT = 2;
+
+#查询国家渠道商品
+SELECT * from rs_sku where 	CHANNEL_CODE = "2021032500010648" and DATA_OPBILLSTATE = 1 and GOODS_TYPE = "00"
+
+SELECT * from rs_sku order by SKU_ID desc limit 60;
+SELECT * from rs_sku where SKU_SHOWNO = "abaaa";
+
+#渠道商品查询
+
+#1 goods
+SELECT * FROM `rs_resource_goods` WHERE GOODS_SPEC = "ddddd" 
+order by goods_id desc;
+#2 sku
+SELECT * FROM rs_sku where GOODS_CODE in 
+(SELECT GOODS_CODE FROM `rs_resource_goods` WHERE GOODS_SPEC = "ddddd") 
+order by sku_id desc;
+#3 商品附件
+SELECT * from rs_goods_file where GOODS_CODE in 
+(SELECT GOODS_CODE FROM `rs_resource_goods` WHERE GOODS_SPEC = "ddddd");
+#4 变更记录
+SELECT * from rs_senddata WHERE FD_BIZCODE in
+(SELECT GOODS_CODE FROM `rs_resource_goods` WHERE GOODS_SPEC = "ddddd");
+#5 商品关联
+SELECT * from rs_goods_rel where GOODS_CODE in
+(SELECT GOODS_CODE FROM `rs_resource_goods` WHERE GOODS_SPEC = "ddddd");
+#6 仓库
+SELECT * from rs_goods_wh where GOODS_CODE in 
+(SELECT GOODS_CODE FROM `rs_resource_goods` WHERE GOODS_SPEC = "ddddd");
+#7 分类
+SELECT * from rs_goods_shop where GOODS_CODE in
+(SELECT GOODS_CODE FROM `rs_resource_goods` WHERE GOODS_SPEC = "ddddd");
+
+#8 商品推送到的所有渠道查询
+SELECT * FROM dis_channel WHERE CHANNEL_CODE IN 
+(SELECT CHANNEL_CODE FROM rs_sku where GOODS_CODE in 
+(SELECT GOODS_CODE FROM `rs_resource_goods` WHERE GOODS_SPEC = "ccccc") 
+order by sku_id desc);
+# 上架查询商品流水操作
+SELECT * from rs_flowdata_finish where FD_BIZID = 538416;
+
